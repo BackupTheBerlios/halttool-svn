@@ -1,6 +1,2 @@
-
-
-
-
 export SVN_SSH="ssh -l twinbee"
 svn -m "initial import of project" import svn+ssh://svn.berlios.de/svnroot/repos/halttool/trunk

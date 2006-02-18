@@ -21,7 +21,7 @@ void Control::connect( Object* o, string message )
 void Control::sendAction()
 	{
 	if ( target and not action.empty() )
-		target->sendMessage( action, this );
+		target->doAction( action, this );
 	}
 
 bool Control::enabled()

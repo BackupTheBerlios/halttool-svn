@@ -8,7 +8,7 @@ class Workspace : public View
 	{
 
 public:
-	Workspace();
+	Workspace( size );
 	
 	void draw();
 	};

@@ -11,13 +11,13 @@ Object::Object()
 Object::~Object()
 	{ }
 
-bool Object::sendMessage( string message, Object* sender )
+bool Object::doAction( string message, Object* sender )
 	{
-	map< string, Method >::iterator found = methods.find( message );
+	map< string, Action >::iterator found = actions.find( message );
 
-	if ( found != methods.end() )
+	if ( found != actions.end() )
 		{
-		Method action = found->second;
+		Action action = found->second;
 		(*this.*action)( sender );
 		return true;
 		}

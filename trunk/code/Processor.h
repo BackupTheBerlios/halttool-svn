@@ -2,21 +2,20 @@
 #ifndef halt_Processor
 #define halt_Processor
 
+// A simple 16-bit processor
+
+#include <string>
+
+#include "Object.h"
 #include "BitField.h"
 #include "Memory.h"
-#include <iostream>
 
-using namespace std;
-
-// A simple 16-bit processor
-class Processor
+class Processor : public Object
 	{
-//	Word d[8];				// data registers
-
 	Memory regs;			// data registers
 	unsigned short a[8];	// address registers
 
-	string mnemonic;		// current instruction
+	std::string mnemonic;	// current instruction
 	BitField ir;			// instruction register
 	unsigned short pc;		// program counter
 	
@@ -29,8 +28,6 @@ public:
 
 	unsigned age( unsigned short address ) const;
 	
-//	void run( unsigned short address = 0 );
-
 	void reset();
 	void start();
 	void step();
@@ -38,10 +35,8 @@ public:
 	bool running();
 
 private:
-	typedef void (Processor::*method)();
-
 	short fetch();
-	method decode();
+	Method decode();
 	void setFlags( short );
 
 	void exec_clr();

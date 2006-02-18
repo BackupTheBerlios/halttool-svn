@@ -6,20 +6,41 @@
 #include <vector>
 #include <iostream>
 
+#include "Object.h"
 #include "Word.h"
 #include "Token.h"
 #include "EA.h"
+#include "BitField.h"
 
-class Sequence
+class Sequence : public Object
 	{
-protected:
+	// these are useful for the life of the sequence
 	Word::Type m_type;
 	std::string m_source;
 	std::vector< Token > m_tokens;
 	std::vector< short > m_code;
 	std::vector< std::string > m_errors;
 
-	EA parseOperand( std::vector< Token >::iterator& );
+	// these are only used during construction
+	std::vector< Token >::iterator token;
+	BitField opWord;
+
+	EA parseOperand();
+
+	void asm_clr();
+	void asm_move();
+
+	void asm_add();
+	void asm_sub();
+	void asm_mul();
+	void asm_div();
+
+	void asm_and();
+	void asm_or();
+	void asm_eor();
+	void asm_not();
+	
+	void asm_stop();
 
 public:
 	Sequence( std::string sourceText );

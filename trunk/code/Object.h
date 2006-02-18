@@ -7,15 +7,18 @@
 
 class Object
 	{
+public:
+	typedef void ( Object::*Method )();
+	typedef void ( Object::*Action )( Object* sender );
+
 protected:
-	typedef void ( Object::*Method )( Object* sender );
-	std::map< std::string, Method > methods; // for dynamic messages
+	std::map< std::string, Action > actions;
 
 public:
 	Object();
 	virtual ~Object();
 
-	bool sendMessage( std::string message, Object* sender = NULL );
+	bool doAction( std::string message, Object* sender = NULL );
 	};
 
 #endif

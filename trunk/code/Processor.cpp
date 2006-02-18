@@ -2,7 +2,8 @@
 #include "Processor.h"
 #include "Memory.h"
 #include "Reference.h"
-//#include "Timer.h"
+
+using namespace std;
 
 Processor g_cpu;
 
@@ -31,15 +32,6 @@ void Processor::reset()
 	setFlags( 0 );
 	}
 
-//void Processor::run( unsigned short address )
-//	{
-//	start();
-//	pc = address;
-//
-//	do { step(); }
-//	while ( m_running );
-//	}
-
 void Processor::start()
 	{ m_running = true; }
 
@@ -50,7 +42,7 @@ void Processor::step()
 	{
 	try {
 		ir = fetch();
-		method execute = decode();
+		Method execute = decode();
 
 		cout << mnemonic << endl;
 
@@ -58,7 +50,7 @@ void Processor::step()
 		}
 	catch ( string message )
 		{
-		cerr << message << endl;
+		cerr << "<run> " << message << endl;
 		m_running = false;
 		}
 	}
@@ -68,34 +60,34 @@ short Processor::fetch()
 	return g_mem.read( pc++, Word::Instruction );
 	}
 
-Processor::method Processor::decode()
+Object::Method Processor::decode()
 	{
 	struct DecodeEntry
 		{
 		string mnemonic;
 		short signature;
 		short mask;
-		method execute;
+		Method execute;
 		};
 
 	static const DecodeEntry table[] = {
 
-		{ "clr",  0x4240, 0xffc0, &Processor::exec_clr },
-		{ "move", 0x3000, 0xf000, &Processor::exec_move },
+		{ "clr",  0x4240, 0xffc0, (Method) &Processor::exec_clr },
+		{ "move", 0x3000, 0xf000, (Method) &Processor::exec_move },
 
-		{ "add",  0xd040, 0xf0c0, &Processor::exec_add },
-		{ "sub",  0x9040, 0xf0c0, &Processor::exec_sub },
-		{ "mul",  0xc1c0, 0xf1c0, &Processor::exec_mul },
-		{ "div",  0x81c0, 0xf1c0, &Processor::exec_div },
+		{ "add",  0xd040, 0xf0c0, (Method) &Processor::exec_add },
+		{ "sub",  0x9040, 0xf0c0, (Method) &Processor::exec_sub },
+		{ "mul",  0xc1c0, 0xf1c0, (Method) &Processor::exec_mul },
+		{ "div",  0x81c0, 0xf1c0, (Method) &Processor::exec_div },
 
-		{ "and",  0xc040, 0xf0c0, &Processor::exec_and },
-		{ "or",   0x8040, 0xf0c0, &Processor::exec_or },
-		{ "eor",  0xb140, 0xf1c0, &Processor::exec_eor },
-		{ "not",  0x4640, 0xffc0, &Processor::exec_not },
+		{ "and",  0xc040, 0xf0c0, (Method) &Processor::exec_and },
+		{ "or",   0x8040, 0xf0c0, (Method) &Processor::exec_or },
+		{ "eor",  0xb140, 0xf1c0, (Method) &Processor::exec_eor },
+		{ "not",  0x4640, 0xffc0, (Method) &Processor::exec_not },
 
-		{ "stop", 0x4e72, 0xffff, &Processor::exec_stop },
+		{ "stop", 0x4e72, 0xffff, (Method) &Processor::exec_stop },
 
-		{ "???", 0, 0, &Processor::exec_undefined }
+		{ "???", 0, 0, (Method) &Processor::exec_undefined }
 		};
 
 	DecodeEntry entry;
@@ -115,9 +107,15 @@ void Processor::setFlags( short foo )
 	zero = foo == 0;
 	}
 
+// -------------------------------------------------------
+
 void Processor::exec_clr()
 	{
 	Reference dest( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
+	
+	if ( not dest.inCategory( EA::data | EA::alterable ))
+		throw string("operand must be alterable data");
+	
 	dest.write( 0 );
 	setFlags( 0 );
 	}
@@ -135,9 +133,17 @@ void Processor::exec_move()
 
 void Processor::exec_add()
 	{
-	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
-	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+	EA dataReg( EA::DataDirect, ir.extract( 9, 3 ));
+	EA ea( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
 
+	bool eaIsDest = ir.extract( 8 );
+
+	Reference src( eaIsDest ? dataReg : ea );
+	Reference dest( eaIsDest ? ea : dataReg );
+	
+	if ( eaIsDest and not dest.inCategory( EA::alterable | EA::memory ))
+		throw string("destination must be alterable memory");
+	
 	short result = src.read() + dest.read();
 
 	dest.write( result );
@@ -146,9 +152,17 @@ void Processor::exec_add()
 
 void Processor::exec_sub()
 	{
-	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
-	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+	EA dataReg( EA::DataDirect, ir.extract( 9, 3 ));
+	EA ea( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
 
+	bool eaIsDest = ir.extract( 8 );
+
+	Reference src( eaIsDest ? dataReg : ea );
+	Reference dest( eaIsDest ? ea : dataReg );
+	
+	if ( eaIsDest and not dest.inCategory( EA::alterable | EA::memory ))
+		throw string("destination must be alterable memory");
+	
 	short result = src.read() - dest.read();
 
 	dest.write( result );
@@ -158,7 +172,10 @@ void Processor::exec_sub()
 void Processor::exec_mul()
 	{
 	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
-	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+	Reference dest( EA::DataDirect, ir.extract( 9, 3 ));
+
+	if ( not src.inCategory( EA::data ))
+		throw string("source must be data");
 
 	short result = src.read() * dest.read();
 
@@ -169,9 +186,12 @@ void Processor::exec_mul()
 void Processor::exec_div()
 	{
 	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
-	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+	Reference dest( EA::DataDirect, ir.extract( 9, 3 ));
 
-	short result = src.read() / dest.read();
+	if ( not src.inCategory( EA::data ))
+		throw string("source must be data");
+
+	short result = dest.read() / src.read();
 
 	dest.write( result );
 	setFlags( result );

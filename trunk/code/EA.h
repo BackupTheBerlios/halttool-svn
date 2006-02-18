@@ -28,7 +28,7 @@ struct EA
 	Mode mode;
 	short reg;
 
-	EA( Mode = Unknown, short _reg = 0 );
+	EA( short _mode = Unknown, short _reg = 0 );
 	bool inCategory( short flags ); // bit-or multiple categories together to test at once
 
 private:

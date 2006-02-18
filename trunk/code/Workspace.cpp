@@ -2,8 +2,8 @@
 #include "Workspace.h"
 #include "graphics.h"
 
-Workspace::Workspace()
-	: View( size() )
+Workspace::Workspace( size s )
+	: View( s )
 	{ }
 
 void Workspace::draw()

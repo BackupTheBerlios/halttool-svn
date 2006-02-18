@@ -1,4 +1,6 @@
 
+#include <string>
+
 #include "EA.h"
 
 short EA::category[] = {
@@ -14,9 +16,12 @@ short EA::category[] = {
 	  0  |    0   |    0    |     0			// Unknown
 	};
 
-EA::EA( Mode _mode, short _reg )
-	: mode(_mode ), reg(_reg )
-	{ }
+EA::EA( short _mode, short _reg )
+	: mode( static_cast<EA::Mode>(_mode )), reg(_reg )
+	{
+	if ( _mode > Unknown )			// wow, that's deep!
+		throw std::string("weird EA");
+	}
 
 bool EA::inCategory( short flags )
 	{

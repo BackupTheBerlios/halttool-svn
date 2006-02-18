@@ -20,8 +20,8 @@ ControlPane::ControlPane()
 
 	setSize( size( r.x + r.w + 10, r.h + 20 ));
 
-	methods["reset"] = (Method) &ControlPane::reset;
-	methods["step"] = (Method) &ControlPane::step;
+	actions["reset"] = (Action) &ControlPane::reset;
+	actions["step"] = (Action) &ControlPane::step;
 	
 	resetButton->connect( this,"reset");
 	stepButton->connect( this,"step");
@@ -37,6 +37,8 @@ void ControlPane::reset( Object* sender )
 
 	g_cpu.reset();
 	g_cpu.start();
+	
+	glutPostRedisplay();
 	}
 
 void ControlPane::step( Object* sender )

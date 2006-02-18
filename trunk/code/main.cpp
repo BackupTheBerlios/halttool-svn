@@ -1,16 +1,10 @@
 
-#include <ctime>
-#include <iostream>
-
-using namespace std;
-
 #include "graphics.h"
+#include "Color.h"
 #include "Workspace.h"
 #include "ProgramEditor.h"
 #include "MemoryView.h"
 #include "ProcessorView.h"
-#include "Color.h"
-#include "Processor.h"
 #include "ControlPane.h"
 
 // globals -----------------------------------------
@@ -119,39 +113,12 @@ void display()
 
 int main( int argc, char* argv[] )
 	{
-	Color::palette["error"] = Color( 0 );
-	Color::palette["command"] = Color( 0.8 );
-	Color::palette["code"] = Color( 0.333 );
-	Color::palette["data"] = Color( 0.6 );
-	Color::palette["address"] = Color( 0.1 );
-
-	// create the interface ------------------------------
-
-	screen = new Workspace;
-	mouseTarget = screen;
-	size screenSize( 500, 500 );
-
-	screen->addSubView( new MemoryView( 300 ), point( 50, 50 ));
-	screen->addSubView( new ProcessorView( 128 ), point( 200, 50 ));
-
-	ProgramEditor* progEdit = new ProgramEditor;
-	progEdit->program( new Program );
-	screen->addSubView( progEdit, point( 10, 100 ));
-
-	screen->addSubView( new ControlPane, point( 2, 2 ));
-
-	// roll the dice
-
-	srand( time( 0 ));
-
-	// setup GLUT ------------------------------------------
-
+	// setup GLUT ---------------------------------------
 	glutInit( &argc, argv );
 	glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE );
 
-	glutInitWindowSize( screenSize.w, screenSize.h );
+	glutInitWindowSize( 640, 480 );
 	glutCreateWindow("Humane Assembly Language Tools");
-//	glutFullScreen();
 
 	glutDisplayFunc( display );
 	glutReshapeFunc( reshape );
@@ -162,7 +129,27 @@ int main( int argc, char* argv[] )
 
 	initGL();
 
-//	glutTimerFunc( 1000, timer, 100 );
+	// ooh, pretty colors! -------------------------------
+	Color::palette["error"] = Color( 0 );
+	Color::palette["command"] = Color( 0.8 );
+	Color::palette["code"] = Color( 0.333 );
+	Color::palette["data"] = Color( 0.6 );
+	Color::palette["address"] = Color( 0.1 );
 
+	// create the interface ------------------------------
+	screen = new Workspace( size( glutGet( GLUT_WINDOW_WIDTH ),
+								  glutGet( GLUT_WINDOW_HEIGHT )));
+	mouseTarget = screen;
+
+	screen->addSubView( new MemoryView( 300 ), point( 50, 50 ));
+	screen->addSubView( new ProcessorView( 128 ), point( 200, 50 ));
+
+	ProgramEditor* progEdit = new ProgramEditor;
+	progEdit->program( new Program );
+	screen->addSubView( progEdit, point( 10, 100 ));
+
+	screen->addSubView( new ControlPane, point( 2, 2 ));
+
+	// start the application -----------------------------
 	glutMainLoop();
 	}

@@ -1,5 +1,4 @@
 
-#include <iostream>
 #include <string>
 
 #include "Reference.h"
@@ -8,9 +7,7 @@
 
 using namespace std;
 
-Reference::Reference( short _mode, short _reg )
-	: EA( static_cast<EA::Mode>(_mode), _reg ),
-	  hasAddress( false ), hasValue( false )
+void Reference::init()
 	{
 	switch ( mode )
 		{
@@ -29,6 +26,18 @@ Reference::Reference( short _mode, short _reg )
 		default:
 			;
 		}
+	}
+
+Reference::Reference( EA ea )
+	: EA( ea.mode, ea.reg ), hasAddress( false ), hasValue( false )
+	{
+	init();
+	}
+
+Reference::Reference( short _mode, short _reg )
+	: EA( _mode, _reg ), hasAddress( false ), hasValue( false )
+	{
+	init();
 	}
 
 short Reference::getAddress()

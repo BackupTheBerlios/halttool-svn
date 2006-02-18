@@ -13,8 +13,11 @@ class Reference : public EA
 	bool hasValue;
 	bool dirty;
 
+	void init();
+
 public:
-	Reference( short _mode, short _reg = 0 );
+	Reference( short _mode = EA::Unknown, short _reg = 0 );
+	Reference( EA );
 
 	short getAddress();
 	short read();

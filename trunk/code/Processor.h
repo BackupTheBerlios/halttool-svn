@@ -22,16 +22,20 @@ class Processor
 	
 	bool negative;
 	bool zero;
-	bool running;
+	bool m_running;
 
 public:
 	Processor();
 
 	unsigned age( unsigned short address ) const;
 	
+//	void run( unsigned short address = 0 );
+
 	void reset();
-	void run( unsigned short address );
+	void start();
 	void step();
+
+	bool running();
 
 private:
 	typedef void (Processor::*method)();

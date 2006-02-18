@@ -5,8 +5,9 @@
 
 using namespace std;
 
-Button::Button( size s, string label )
-	: Control( s, label )
+Button::Button( string label )
+	: Control( size( label.length() * fontWidth + 2 * margin,
+									  fontHeight + 2 * leading ), label )
 	{ }
 
 View* Button::click( point p )

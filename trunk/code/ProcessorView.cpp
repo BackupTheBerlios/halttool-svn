@@ -36,7 +36,16 @@ void ProcessorView::draw()
 
 	for ( unsigned reg = 0; reg <= 7; ++reg )
 		{
-		Color::palette["data"].set();
+		float intensity;
+		switch ( g_cpu.age( reg ))
+			{
+			case 0: intensity = 1.0; break;
+			case 1: intensity = 0.8; break;
+			case 2: intensity = 0.6; break;
+			case 3: intensity = 0.4; break;
+			default: intensity = 0.2;
+			}
+		Color::palette["data"].scaleValue( intensity ).set();
 
 		gotoPoint( angle, pathRadius );
 			drawCircle( circleRadius, outline );

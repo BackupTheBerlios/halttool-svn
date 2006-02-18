@@ -11,7 +11,7 @@ class Control : public View
 	std::string action;
 
 protected:
-	bool enabled;
+	bool m_enabled;
 	std::string m_label;
 
 public:
@@ -21,11 +21,11 @@ public:
 	void connect( Object*, std::string message );
 	void sendAction();
 
-//	std::string label();
-//	void label( std::string newLabel );
+	std::string label();
+	void label( std::string newLabel );
 
-	bool isEnabled();
-	void setEnabled( bool );
+	bool enabled();
+	void enabled( bool );
 	};
 
 #endif

@@ -8,7 +8,7 @@ class Button : public Control
 	{
 
 public:
-	Button( size, std::string label );
+	Button( std::string label );
 	
 	View* click( point );
 

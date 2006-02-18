@@ -1,3 +1,4 @@
+
 #include <ctime>
 #include <iostream>
 
@@ -9,9 +10,7 @@ using namespace std;
 #include "MemoryView.h"
 #include "ProcessorView.h"
 #include "Color.h"
-#include "Clock.h"
-#include "Indicator.h"
-
+#include "Processor.h"
 #include "ControlPane.h"
 
 // globals -----------------------------------------
@@ -116,13 +115,6 @@ void display()
 	glutSwapBuffers();
 	}
 
-void timer( int ms )
-	{
-	g_clock.tick();
-	glutTimerFunc( ms, timer, ms );
-	glutPostRedisplay();
-	}
-
 // --------------------------------------------------
 
 int main( int argc, char* argv[] )
@@ -170,7 +162,7 @@ int main( int argc, char* argv[] )
 
 	initGL();
 
-	glutTimerFunc( 1000, timer, 100 );
+//	glutTimerFunc( 1000, timer, 100 );
 
 	glutMainLoop();
 	}

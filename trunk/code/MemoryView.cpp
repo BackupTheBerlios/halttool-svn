@@ -41,14 +41,24 @@ void MemoryView::draw()
 	for ( unsigned addr = 0; addr < memSize; ++addr )
 		{
 		const Word& word = g_mem.peek( addr );
+		float intensity;
+
+		switch ( word.age())
+			{
+			case 0: intensity = 1.0; break;
+			case 1: intensity = 0.8; break;
+			case 2: intensity = 0.6; break;
+			case 3: intensity = 0.4; break;
+			default: intensity = 0.2;
+			}
 
 		switch ( word.type() )
 			{
 			case Word::Data:
-				Color::palette["data"].set();
+				Color::palette["data"].scaleValue( intensity ).set();
 				break;
 			case Word::Instruction:
-				Color::palette["code"].set();
+				Color::palette["code"].scaleValue( intensity ).set();
 				break;
 			default:
 				Color().set();

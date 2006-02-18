@@ -2,12 +2,12 @@
 #include "Processor.h"
 #include "Memory.h"
 #include "Reference.h"
-#include "Clock.h"
+//#include "Timer.h"
 
 Processor g_cpu;
 
 Processor::Processor()
-	: ir(0), pc(0), zero(true), running(false)
+	: ir(0), pc(0), zero(true), m_running(false)
 	{
 	regs << Sequence("word[8]");
 	}
@@ -19,6 +19,9 @@ unsigned Processor::age( unsigned short address ) const
 
 void Processor::reset()
 	{
+	pc = 0;
+	ir.bits = 0;
+
 	for ( int i = 0; i <= 7; ++i )
 		{
 		regs.write( i, Word::Data, 0 );
@@ -28,24 +31,36 @@ void Processor::reset()
 	setFlags( 0 );
 	}
 
-void Processor::run( unsigned short address )
-	{
-	reset();
-	pc = address;
+//void Processor::run( unsigned short address )
+//	{
+//	start();
+//	pc = address;
+//
+//	do { step(); }
+//	while ( m_running );
+//	}
 
-	running = true;
-	while ( running )
-		step();
-	}
+void Processor::start()
+	{ m_running = true; }
+
+bool Processor::running()
+	{ return m_running; }
 
 void Processor::step()
 	{
-	ir = fetch();
-	method execute = decode();
+	try {
+		ir = fetch();
+		method execute = decode();
 
-	cout << mnemonic << endl;
+		cout << mnemonic << endl;
 
-	(*this.*execute)();
+		(*this.*execute)();
+		}
+	catch ( string message )
+		{
+		cerr << message << endl;
+		m_running = false;
+		}
 	}
 
 short Processor::fetch()
@@ -207,7 +222,7 @@ void Processor::exec_not()
 
 void Processor::exec_stop()
 	{
-	running = false;
+	m_running = false;
 	}
 
 void Processor::exec_undefined()

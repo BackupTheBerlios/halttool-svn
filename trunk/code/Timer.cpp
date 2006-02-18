@@ -3,17 +3,15 @@
 #include "Color.h"
 #include "graphics.h"
 #include "utility.h"
-#include <iostream>
+
 std::vector<Timer*> Timer::timers;
 Timer g_timer(1.0);
 
 Timer::Timer( float hertz )
-	: Control( size( 10, 10 )), timerID( timers.size()), m_ticks( 0 )
+	: Control( size( 20, 20 )), timerID( timers.size()), m_ticks( 0 )
 	{
 	timers.push_back( this );
 	rate( hertz );
-	
-	std::cerr <<"Timer: "<< timerID <<' '<< timers.size() <<' '<< m_delay << std::endl;
 	}
 
 float Timer::rate()
@@ -58,11 +56,27 @@ void Timer::trigger( int id )
 		}
 	}
 
+View* Timer::click( point p )
+	{
+	enabled() ? stop() : start();
+	return this;
+	}
+
 void Timer::draw()
 	{
-	Color(0.333).scaleValue( m_ticks & 1 ? 0.6 : 0.4 ).set();
-	localRect().fill();
+	rect r = localRect();
+
+	if ( enabled())
+		{
+		Color(0.333).scaleValue( m_ticks & 1 ? 0.625 : 0.375 ).set();
+		r.fill();
+		}
+	else
+		{
+		Color(0.333).scaleValue( 0.5 ).set();
+		r.fill();
+		}
 
 	glColor3f( 0, 0, 0 );
-	localRect().stroke();
+	r.stroke();
 	}

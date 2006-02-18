@@ -6,6 +6,8 @@
 
 #include "Control.h"
 
+// todo: safe deletion of timers
+
 class Timer : public Control
 	{
 	static std::vector<Timer*> timers;
@@ -27,7 +29,8 @@ public:
 
 	unsigned ticks();
 
-//----------------	
+//	---------------
+	View* click( point );
 	void draw();
 	};
 

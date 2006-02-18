@@ -8,14 +8,8 @@
 
 class ControlPane : public Pane
 	{
-	enum Status { Idle, Running, Paused, Error };
-
-	Status status;
-
 	Button* resetButton;
-	Button* runPauseButton;
 	Button* stepButton;
-//	Timer* timer;
 
 public:
 	ControlPane();

@@ -20,7 +20,7 @@ void Control::connect( Object* o, string message )
 
 void Control::sendAction()
 	{
-	if ( target and not action.empty() )
+	if ( target && !action.empty() )
 		target->doAction( action, this );
 	}
 

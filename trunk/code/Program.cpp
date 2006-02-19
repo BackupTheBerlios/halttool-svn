@@ -50,7 +50,7 @@ const vector<Sequence>& Program::lines() const
 
 Sequence& Program::line( unsigned n )
 	{
-	if ( n < 1 or n > m_lines.size())
+	if ( n < 1 || n > m_lines.size())
 		throw string("line number out of range");
 	
 	return m_lines[ n - 1 ];
@@ -58,7 +58,7 @@ Sequence& Program::line( unsigned n )
 
 void Program::insert( unsigned n, Sequence seq )
 	{
-	if ( n < 1 or n > m_lines.size())
+	if ( n < 1 || n > m_lines.size())
 		throw string("line number out of range");
 
 	m_lines.insert( m_lines.begin() + ( n - 1 ), seq );
@@ -66,7 +66,7 @@ void Program::insert( unsigned n, Sequence seq )
 
 void Program::remove( unsigned n )
 	{
-	if ( n < 1 or n > m_lines.size())
+	if ( n < 1 || n > m_lines.size())
 		throw string("line number out of range");
 	
 	m_lines.erase( m_lines.begin() + ( n - 1 ));

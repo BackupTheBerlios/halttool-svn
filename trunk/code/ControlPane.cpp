@@ -48,7 +48,7 @@ void ControlPane::step( Object* sender )
 
 	g_cpu.step();
 
-	if ( not g_cpu.running())
+	if ( ! g_cpu.running())
 		g_timer.stop();
 
 	glutPostRedisplay();

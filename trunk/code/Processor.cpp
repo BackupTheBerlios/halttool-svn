@@ -113,7 +113,7 @@ void Processor::exec_clr()
 	{
 	Reference dest( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
 	
-	if ( not dest.inCategory( EA::data | EA::alterable ))
+	if ( !dest.inCategory( EA::data | EA::alterable ))
 		throw string("operand must be alterable data");
 	
 	dest.write( 0 );
@@ -136,12 +136,12 @@ void Processor::exec_add()
 	EA dataReg( EA::DataDirect, ir.extract( 9, 3 ));
 	EA ea( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
 
-	bool eaIsDest = ir.extract( 8 );
+	bool eaIsDest = (bool) ir.extract( 8 );
 
 	Reference src( eaIsDest ? dataReg : ea );
 	Reference dest( eaIsDest ? ea : dataReg );
 	
-	if ( eaIsDest and not dest.inCategory( EA::alterable | EA::memory ))
+	if ( eaIsDest && !dest.inCategory( EA::alterable | EA::memory ))
 		throw string("destination must be alterable memory");
 	
 	short result = src.read() + dest.read();
@@ -155,12 +155,12 @@ void Processor::exec_sub()
 	EA dataReg( EA::DataDirect, ir.extract( 9, 3 ));
 	EA ea( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
 
-	bool eaIsDest = ir.extract( 8 );
+	bool eaIsDest = (bool) ir.extract( 8 );
 
 	Reference src( eaIsDest ? dataReg : ea );
 	Reference dest( eaIsDest ? ea : dataReg );
 	
-	if ( eaIsDest and not dest.inCategory( EA::alterable | EA::memory ))
+	if ( eaIsDest && !dest.inCategory( EA::alterable | EA::memory ))
 		throw string("destination must be alterable memory");
 	
 	short result = src.read() - dest.read();
@@ -174,7 +174,7 @@ void Processor::exec_mul()
 	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
 	Reference dest( EA::DataDirect, ir.extract( 9, 3 ));
 
-	if ( not src.inCategory( EA::data ))
+	if ( !src.inCategory( EA::data ))
 		throw string("source must be data");
 
 	short result = src.read() * dest.read();
@@ -188,7 +188,7 @@ void Processor::exec_div()
 	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
 	Reference dest( EA::DataDirect, ir.extract( 9, 3 ));
 
-	if ( not src.inCategory( EA::data ))
+	if ( !src.inCategory( EA::data ))
 		throw string("source must be data");
 
 	short result = dest.read() / src.read();

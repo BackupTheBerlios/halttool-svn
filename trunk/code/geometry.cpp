@@ -15,9 +15,9 @@ rect::rect( point p, size s )
 
 bool rect::contains( point p )
 	{
-	return p.x >= x and
-		   p.x <= x + w and
-		   p.y >= y and
+	return p.x >= x &&
+		   p.x <= x + w &&
+		   p.y >= y &&
 		   p.y <= y + h;
 	}
 

@@ -20,7 +20,7 @@ Sequence::Sequence( string sourceText )
 		{
 		m_tokens.push_back( t );
 
-		if ( not lex.success() )
+		if ( !lex.success() )
 			m_errors.push_back( lex.error() );
 		}
 	
@@ -58,33 +58,40 @@ const vector< short >& Sequence::code() const
 
 // ----------------------------------------------------------------------
 
-struct EncodeEntry
+class EncodeEntry
 	{
-	short signature;
-	Object::Method assemble;
+	 public:
+		short signature;
+	    Method assemble;
+
+		EncodeEntry(short sig, Method ass)
+		{
+			signature = sig;
+			assemble  = ass;
+		}
 	};
 
 void Sequence::translate()
 	{
-	static map< string, EncodeEntry > table;
+	static map < string, EncodeEntry > table;
 	static bool initialized = false;
 
-	if ( not initialized )
+	if ( !initialized )
 		{
-		table["clr"]  = (EncodeEntry) { 0x4240, (Method) &Sequence::asm_clr };
-		table["move"] = (EncodeEntry) { 0x3000, (Method) &Sequence::asm_move };
+		table["clr"]  = EncodeEntry ( 0x4240, (Method) &Sequence::asm_clr );
+		table["move"] = EncodeEntry ( 0x3000, (Method) &Sequence::asm_move );
 
-		table["add"]  = (EncodeEntry) { 0xd040, (Method) &Sequence::asm_add };
-		table["sub"]  = (EncodeEntry) { 0x9040, (Method) &Sequence::asm_sub };
-		table["mul"]  = (EncodeEntry) { 0xc1c0, (Method) &Sequence::asm_mul };
-		table["div"]  = (EncodeEntry) { 0x81c0, (Method) &Sequence::asm_div };
+		table["add"]  = EncodeEntry ( 0xd040, (Method) &Sequence::asm_add );
+		table["sub"]  = EncodeEntry ( 0x9040, (Method) &Sequence::asm_sub );
+		table["mul"]  = EncodeEntry ( 0xc1c0, (Method) &Sequence::asm_mul );
+		table["div"]  = EncodeEntry ( 0x81c0, (Method) &Sequence::asm_div );
 
-		table["and"]  = (EncodeEntry) { 0xc040, (Method) &Sequence::asm_and };
-		table["or"]   = (EncodeEntry) { 0x8040, (Method) &Sequence::asm_or };
-		table["eor"]  = (EncodeEntry) { 0xb140, (Method) &Sequence::asm_eor };
-		table["not"]  = (EncodeEntry) { 0x4640, (Method) &Sequence::asm_not };
+		table["and"]  = EncodeEntry ( 0xc040, (Method) &Sequence::asm_and );
+		table["or"]   = EncodeEntry ( 0x8040, (Method) &Sequence::asm_or  );
+		table["eor"]  = EncodeEntry ( 0xb140, (Method) &Sequence::asm_eor );
+		table["not"]  = EncodeEntry ( 0x4640, (Method) &Sequence::asm_not );
 		
-		table["stop"] = (EncodeEntry) { 0x4e72, (Method) &Sequence::asm_stop };
+		table["stop"] = EncodeEntry ( 0x4e72, (Method) &Sequence::asm_stop );
 
 		initialized = true;
 		}
@@ -106,7 +113,7 @@ void Sequence::translate()
 			++token;
 			m_type = Word::Data;
 
-// <matt>
+// <matt> 2-10-05
 			// foo datatype [] OR foo datatype [number] or foo datatype [] = n,n,n,...
 			bool needToInitArray = false;
 			int  numLast         = m_code.size();
@@ -168,12 +175,14 @@ void Sequence::translate()
 					token++;
 					}
 				}
-// </matt>
+// </matt> 2-10-05
 			}
 
 		else if ( token->is( Token::Opcode ))
 			{
-			EncodeEntry& entry = table[ token->text ];
+			//<matt> 2-18-05
+			 EncodeEntry& entry = table[token->text];
+			//</matt>
 			++token;
 
 			m_type = Word::Instruction;
@@ -282,7 +291,7 @@ void Sequence::asm_move()
 
 	EA dest = parseOperand();
 
-	if ( not dest.inCategory( EA::alterable ))
+	if ( !dest.inCategory( EA::alterable ))
 		throw string("destination must be alterable");
 
 	opWord.insert( dest.mode, 6, 3 );

@@ -5,6 +5,10 @@
 #include "Color.h"
 #include "graphics.h"
 
+//matt 2-16-05
+extern float M_PI;
+
+
 ProcessorView::ProcessorView( unsigned diameter )
 	: CircleView( diameter )
 	{ }

@@ -40,7 +40,7 @@ bool Lexer::operator >> ( Token& t )
 
 	try {
 		t = next();
-		return not t.is( Token::EndLine );
+		return !t.is( Token::EndLine );
 		}
 	catch ( string message )
 		{
@@ -106,7 +106,7 @@ Token Lexer::next()
 		{
 		getNumber("0123456789");
 
-		if ( token.number < 0 or token.number > 7 )
+		if ( token.number < 0 || token.number > 7 )
 			throw string("data registers range from 0 to 7");
 
 		token.type = Token::DataReg;
@@ -115,12 +115,12 @@ Token Lexer::next()
 		{
 		getNumber("0123456789");
 
-		if ( token.number < 0 or token.number > 6 )
+		if ( token.number < 0 || token.number > 6 )
 			throw string("address registers range from 0 to 6");
 
 		token.type = Token::AddressReg;
 		}
-	else if ( not token.text.empty() )	// command, opcode, or number base
+	else if ( !token.text.empty() )	// command, opcode, or number base
 		{
 		if (( commands.find( token.text )) != commands.end() )
 			token.type = Token::Command;
@@ -128,7 +128,7 @@ Token Lexer::next()
 			token.type = Token::Opcode;
 		else if (( dataTypes.find( token.text )) != dataTypes.end() )
 			token.type = Token::DataType;
-		else if ( token.text == "hex" or token.text == "bin" or token.text == "dec" )
+		else if ( token.text == "hex" || token.text == "bin" || token.text == "dec" )
 			{
 			if ( line.get() == ':' )	// enforce separator
 				token.text += ':';

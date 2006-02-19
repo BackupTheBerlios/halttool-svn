@@ -4,6 +4,9 @@
 #include "CircleView.h"
 #include "graphics.h"
 
+//matt 2-18-05
+extern float M_PI;
+
 CircleView::CircleView( unsigned diameter )
 	: View( size( diameter, diameter ))
 	{ }
@@ -84,7 +87,7 @@ void CircleView::drawCircle( float radius, DrawingStyle style )
 	int i, n = numSteps( radius, 1.0 );
 	float angle, step = 2 * M_PI / n;
 
-	if ( style == solid or style == outline )
+	if ( style == solid || style == outline )
 		{
 		glBegin( GL_POLYGON );
 			for ( angle = 0, i = n; i--; angle += step )

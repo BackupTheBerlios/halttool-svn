@@ -50,7 +50,7 @@ short Reference::getAddress()
 
 short Reference::read()
 	{
-	if ( not hasValue )
+	if ( !hasValue )
 		{
 		switch ( mode )
 			{

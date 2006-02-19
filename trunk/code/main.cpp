@@ -105,8 +105,8 @@ void reshape( int w, int h )
 
 void display()
 	{
-	screen->draw();
-	glutSwapBuffers();
+	 screen->draw();
+	 glutSwapBuffers();
 	}
 
 // --------------------------------------------------
@@ -150,7 +150,8 @@ int main( int argc, char* argv[] )
 	 Program * someprog = new Program;
 	 progEdit->program( someprog );
 	 screen->addSubView( progEdit, point( 10, 100 ));
-    // end of windows problem
+	 glutIdleFunc( display);
+	 // end of windows problem
 
 	screen->addSubView( new ControlPane, point( 2, 2 ));
 

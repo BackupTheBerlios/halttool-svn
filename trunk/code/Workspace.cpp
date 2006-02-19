@@ -24,7 +24,8 @@ void Workspace::draw()
 		glVertex2i( 0, bounds.h );
 	glEnd();
  
-	//<matt>: "pretty pretty snowflakes" 2-18-06
+	//<matt>: "pretty prettier snowflakes" 2-18-06
+	const float SFSIZE = 3.0;
 	if (snowflakes.size() == 0) 
 	{ for (int i = 0; i <= 50; i++)
 	  snowflakes.push_back
@@ -32,7 +33,7 @@ void Workspace::draw()
 	}
 	for (int i = 0; i < snowflakes.size(); i++)
 	{
-	 snowflakes[i].rz += 5.0;
+	 snowflakes[i].rz += SFSIZE;
 	 if (snowflakes[i].rz >= 360.0) snowflakes[i].rz = 0.0;
 
 	 snowflakes[i].px += 0.5 + snowflakes[i].dx;
@@ -46,15 +47,16 @@ void Workspace::draw()
 	 glRotatef(snowflakes[i].rz, 0.0, 0.0, 1.0);
 	 glBegin( GL_TRIANGLES );
 	  glColor3f( 1.0, 1.0, 1.0 );
-	  glVertex2f( - 1.0, + 1.0);
-	  glVertex2f( 0.0,  - 1.0);
-	  glVertex2f( + 1.0, + 1.0);
+	  glVertex2f( - SFSIZE, + SFSIZE);
+	  glVertex2f( 0.0,  - SFSIZE);
+	  glVertex2f( + SFSIZE, + SFSIZE);
 	 glEnd();
+	 glTranslatef(0.0, SFSIZE/2.0, 0.0);
 	 glBegin( GL_TRIANGLES );
 	  glColor3f( 1.0, 1.0, 1.0 );
-	  glVertex2f( + 1.0, - 1.0);
-	  glVertex2f( 0.0,  + 1.0);
-	  glVertex2f( - 1.0, - 1.0);
+	  glVertex2f( + SFSIZE, - SFSIZE);
+	  glVertex2f( 0.0,  + SFSIZE);
+	  glVertex2f( - SFSIZE, - SFSIZE);
 	 glEnd();
 	 glPopMatrix();
 	}

@@ -194,7 +194,7 @@ void Sequence::translate()
 		else if ( token->is( Token::Opcode ))
 			{
 			//<matt> 2-18-05
-			 EncodeEntry& entry = table[token->text];
+			const EncodeEntry& entry = table[token->text];
 			//</matt>
 			++token;
 

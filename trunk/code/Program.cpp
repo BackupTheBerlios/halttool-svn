@@ -5,25 +5,29 @@
 
 using namespace std;
 
-const string DocumentPath("/Users/merwin/Develop/HALT/programs/");
+// const string DocumentPath("/Users/merwin/Develop/HALT/programs/");
 
 Program::Program(string name)
 	: m_name(name)
 	{
-	ifstream file(( DocumentPath + m_name + ".s").c_str());
-
-	if ( file.is_open() )
+	if ( ! m_name.empty())
 		{
-		string s;
-		getline( file, s );
-		while ( ! file.eof() )
+		ifstream file(( /* DocumentPath + */ m_name + ".s").c_str());
+
+		if ( file.is_open() )
 			{
-			m_lines.push_back( Sequence( s ));
+			string s;
 			getline( file, s );
+			while ( ! file.eof() )
+				{
+				m_lines.push_back( Sequence( s ));
+				getline( file, s );
+				}
 			}
 		}
 	
 	if ( m_lines.empty())
+		// allow editing of new or empty files
 		m_lines.push_back( Sequence ("") );
 	}
 

@@ -42,6 +42,8 @@ class Sequence : public Object
 	
 	void asm_stop();
 
+	void asm_noop();
+
 public:
 	Sequence( std::string sourceText );
 

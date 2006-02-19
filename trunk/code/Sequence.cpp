@@ -58,20 +58,6 @@ const vector< Token >& Sequence::tokens() const
 const vector< short >& Sequence::code() const
 	{ return m_code; }
 
-// ----------------------------------------------------------------------
-
-//class EncodeEntry
-//	{
-//	 public:
-//		short signature;
-//	    Method assemble;
-//
-//		EncodeEntry(short sig, Method ass)
-//		{
-//			signature = sig;
-//			assemble  = ass;
-//		}
-//	};
 
 struct EncodeEntry
 	{
@@ -91,7 +77,7 @@ void Sequence::translate()
 
 	if ( !initialized )
 		{
-		table["clr"]  = EncodeEntry ( 0x4240, (Method) &Sequence::asm_clr );
+		table["clr"]  = EncodeEntry ( 0x4240, (Method) &Sequence::asm_clr  );
 		table["move"] = EncodeEntry ( 0x3000, (Method) &Sequence::asm_move );
 
 		table["add"]  = EncodeEntry ( 0xd040, (Method) &Sequence::asm_add );
@@ -152,7 +138,18 @@ void Sequence::translate()
 				token->mustBe(Token::CloseBracket);
 				token++;
 				}
-			else m_code.push_back(0); //not an array, a single value
+			
+			else //not an array
+			{
+				if (token->is(Token::Equal))
+				{
+				 ++token;
+				 token->mustBe(Token::Number);
+				 m_code.push_back(token->number);
+				 ++token;
+				}
+				else m_code.push_back(0); //not an array, a single value
+			}
 
 			if (needToInitArray)
 				{
@@ -423,3 +420,7 @@ void Sequence::asm_not()
 void Sequence::asm_stop()
 	{
 	}
+
+void Sequence::asm_noop()
+{ //do we need this for implementing comments? prolly not
+}

@@ -145,11 +145,17 @@ int main( int argc, char* argv[] )
 	screen->addSubView( new ProcessorView( 128 ), point( 200, 50 ));
 
 	ProgramEditor* progEdit = new ProgramEditor;
-	progEdit->program( new Program );
-	screen->addSubView( progEdit, point( 10, 100 ));
+	
+	// Matt: "Windows Exception is in these two lines!!"
+	 Program * someprog = new Program;
+	 progEdit->program( someprog );
+	 screen->addSubView( progEdit, point( 10, 100 ));
+    // end of windows problem
 
 	screen->addSubView( new ControlPane, point( 2, 2 ));
 
 	// start the application -----------------------------
 	glutMainLoop();
+
+	return 0;
 	}

@@ -24,7 +24,7 @@ Program::Program(string name)
 		}
 	
 	if ( m_lines.empty())
-		m_lines.push_back( Sequence(""));
+		m_lines.push_back( Sequence ("") );
 	}
 
 const string& Program::name() const

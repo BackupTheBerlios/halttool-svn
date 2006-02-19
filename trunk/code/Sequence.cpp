@@ -12,10 +12,12 @@ Sequence::Sequence( string sourceText )
 	: m_type( Word::Unknown ), m_source( sourceText )
 	{
 	static Lexer lex;
+		
 	Token t;
-	
+	 
 	lex << sourceText;
 
+	if (sourceText != string("") ) //Matt 2-18-06
 	while ( lex >> t )
 		{
 		m_tokens.push_back( t );

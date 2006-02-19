@@ -18,13 +18,13 @@ Sequence::Sequence( string sourceText )
 	lex << sourceText;
 
 	if (sourceText != string("") ) //Matt 2-18-06
-	while ( lex >> t )
-		{
-		m_tokens.push_back( t );
+		while ( lex >> t )
+			{
+			m_tokens.push_back( t );
 
-		if ( !lex.success() )
-			m_errors.push_back( lex.error() );
-		}
+			if ( ! lex.success() )
+				m_errors.push_back( lex.error() );
+			}
 	
 	translate();
 	}
@@ -206,6 +206,9 @@ void Sequence::translate()
 		else
 			throw string("expected ") + token->typeString( Token::Opcode ) + " or "
 									  + token->typeString( Token::DataType );
+
+		if ( token->is( Token::Comment ))
+			++token; // ignore it
 
 		token->mustBe( Token::EndLine );
 		}

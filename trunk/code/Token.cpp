@@ -11,10 +11,11 @@ string Token::typeString( int t ) const
 	{
 	static const string tokenNames[] =
 		{
-		"Klingon","end of line","command","data type","opcode",
+		"Klingon","end of line","comment",
+		"command","data type","opcode",
 		"data register","address register","number","label",
-		"equal","plus","minus","comma","open paren","close paren",
-		"open bracket","close bracket"
+		"equal","plus","minus","comma",
+		"open paren","close paren","open bracket","close bracket"
 		};
 
 	return tokenNames[( t == -1 ) ? type : t ];

@@ -160,7 +160,6 @@ Token Lexer::next()
 			{
 			token.text = "";
 			token.type = Token::EndLine;
-			// fix position
 			}
 		else
 			{
@@ -168,6 +167,14 @@ Token Lexer::next()
 
 			switch ( c )
 				{
+				case ';':
+					token.type = Token::Comment;
+					{
+					string restOfLine;
+					getline( line, restOfLine );
+					token.text += restOfLine;
+					}
+					break;
 				case '+':
 					token.type = Token::Plus;
 					break;

@@ -8,10 +8,11 @@ struct Token
 	{
 	enum Type
 		{
-		Unknown, EndLine, Command, DataType, Opcode,
+		Unknown, EndLine, Comment,
+		Command, DataType, Opcode,
 		DataReg, AddressReg, Number, Label,
-		Equal, Plus, Minus, Comma, OpenParen, CloseParen,
-		OpenBracket, CloseBracket
+		Equal, Plus, Minus, Comma,
+		OpenParen, CloseParen, OpenBracket, CloseBracket
 		};
 
 	Type type;

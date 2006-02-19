@@ -1,11 +1,9 @@
 
-#include <cmath>
-
 #include "CircleView.h"
 #include "graphics.h"
 
 //matt 2-18-05
-extern float M_PI;
+//extern float M_PI;
 
 CircleView::CircleView( unsigned diameter )
 	: View( size( diameter, diameter ))

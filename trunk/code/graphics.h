@@ -10,4 +10,9 @@
 		#include <GL/glut.h>
 	#endif
 
+	#include <cmath>
+	#ifndef M_PI
+		#define M_PI (355.0 / 113.0)
+	#endif
+
 #endif

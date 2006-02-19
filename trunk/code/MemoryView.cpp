@@ -1,13 +1,12 @@
 
-#include <cstdlib>
-#include <cmath>
+//#include <cstdlib>
 
 #include "MemoryView.h"
 #include "Color.h"
 #include "graphics.h"
 
 //matt 2-16-05
-extern float M_PI;
+//extern float M_PI;
 
 using namespace std;
 

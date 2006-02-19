@@ -1,15 +1,11 @@
 
-#include <cmath>
-
 #include "Color.h"
 #include "graphics.h"
 
-using namespace std;
-
 //matt 2-16-05
-extern float M_PI;
+//extern float M_PI;
 
-map< string, Color > Color::palette;
+std::map< std::string, Color > Color::palette;
 
 
 Color::Color()

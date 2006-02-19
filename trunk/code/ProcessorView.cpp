@@ -1,12 +1,10 @@
 
-#include <cmath>
-
 #include "ProcessorView.h"
 #include "Color.h"
 #include "graphics.h"
 
 //matt 2-16-05
-extern float M_PI;
+//extern float M_PI;
 
 
 ProcessorView::ProcessorView( unsigned diameter )

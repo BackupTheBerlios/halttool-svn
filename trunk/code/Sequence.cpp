@@ -58,17 +58,28 @@ const vector< short >& Sequence::code() const
 
 // ----------------------------------------------------------------------
 
-class EncodeEntry
-	{
-	 public:
-		short signature;
-	    Method assemble;
+//class EncodeEntry
+//	{
+//	 public:
+//		short signature;
+//	    Method assemble;
+//
+//		EncodeEntry(short sig, Method ass)
+//		{
+//			signature = sig;
+//			assemble  = ass;
+//		}
+//	};
 
-		EncodeEntry(short sig, Method ass)
-		{
-			signature = sig;
-			assemble  = ass;
-		}
+struct EncodeEntry
+	{
+	short signature;
+	Object::Method assemble;
+
+	EncodeEntry( short sig = 0, Object::Method ass = NULL )
+		// defaults allow it to be placed in an STL container
+		: signature( sig ), assemble( ass )
+		{ }
 	};
 
 void Sequence::translate()

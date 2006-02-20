@@ -137,17 +137,3 @@ void CircleView::drawArc( float radius, float begin, float end )
 
 	glDisable( GL_LINE_SMOOTH );
 	}
-
-//void CircleView::drawCirclesOnArc( int numCircles, float pathRadius, float begin, float end, DrawingStyle style )
-//	{
-//	float circleRadius = 0.667 * M_PI * (end - begin) / numCircles * pathRadius;
-//	float step = (end - begin) / numCircles;
-//
-//	for ( float angle = begin + step / 2; numCircles-- ; angle += step )
-//		{
-//		gotoPoint( angle, pathRadius );
-//		drawCircle( circleRadius, style );
-//		glPopMatrix();
-//		}
-//	}
-

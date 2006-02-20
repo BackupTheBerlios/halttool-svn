@@ -30,7 +30,10 @@ void Button::draw()
 		glVertex2i( 0, bounds.h );
 	glEnd();
 
-	glColor3f( 0, 0, 0 );
-	drawText( m_label, point( bounds.w / 2 - m_label.length() * fontWidth / 2, bounds.h / 2 - fontHeight / 2 ));
+	glColor3f( 1, 1, 1 );
+	drawText( m_label, point( bounds.w / 2 - m_label.length() * fontWidth / 2,
+							  bounds.h / 2 - fontHeight / 2 ));
+	
+	glColor4f( 0, 0, 0, 0.5 );
 	localRect().stroke();
 	}

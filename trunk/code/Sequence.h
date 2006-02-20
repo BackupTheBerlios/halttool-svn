@@ -29,20 +29,15 @@ class Sequence : public Object
 
 	void asm_clr();
 	void asm_move();
+	void asm_lea();
 
-	void asm_add();
-	void asm_sub();
-	void asm_mul();
-	void asm_div();
+	void asm_add_sub();
+	void asm_mul_div();
 
 	void asm_and();
 	void asm_or();
 	void asm_eor();
 	void asm_not();
-	
-	void asm_stop();
-
-	void asm_noop();
 
 public:
 	Sequence( std::string sourceText );

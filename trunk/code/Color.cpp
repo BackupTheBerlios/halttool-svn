@@ -4,7 +4,6 @@
 
 std::map< std::string, Color > Color::palette;
 
-
 Color::Color()
 	: red(0.5), green(0.5), blue(0.5), alpha(1.0)
 	{ }

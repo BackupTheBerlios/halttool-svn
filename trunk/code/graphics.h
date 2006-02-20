@@ -12,6 +12,7 @@
 
 	#include <cmath>
 	#ifndef M_PI
+		// Microsoft does not define pi in their math library. Go figure.
 		#define M_PI (355.0 / 113.0)
 	#endif
 

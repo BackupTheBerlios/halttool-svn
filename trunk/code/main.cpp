@@ -42,8 +42,15 @@ void keyboard( unsigned char key, int x, int y )
 		#ifdef __APPLE__
 			case 0x08:	key = deleteKey;		break;
 			case 0x7f:	key = backspaceKey;		break;
-		#else //running on a windows PC or Linux
-				//this could cause trouble if we are running Linux on a Mac
+		#else
+				// <matt>
+				//	running on a windows PC or Linux
+				//	this could cause trouble if we are running Linux on a Mac
+				// </matt>
+				// <mike>
+				//	What kind of nutjob would do that? Oh wait, that's me...
+				//	Let's not cater to extreme minorities.
+				// </mike>
 			case 0x7f:	key = deleteKey;		break;
 			case 0x08:	key = backspaceKey;		break;
 		#endif
@@ -128,6 +135,8 @@ int main( int argc, char* argv[] )
 	glutMouseFunc( mouse );
 	glutMotionFunc( motion );
 
+	glutIdleFunc( display ); // for snowflakes
+
 	initGL();
 
 	// ooh, pretty colors! -------------------------------
@@ -148,13 +157,16 @@ int main( int argc, char* argv[] )
 	ProgramEditor* progEdit = new ProgramEditor;
 	
 	// Matt: "Windows Exception is in these two lines!!"
-	 Program * someprog = new Program;
-	 progEdit->program( someprog );
+//	 Program * someprog = new Program;
+//	 progEdit->program( someprog );
+	 progEdit->program( new Program );
 	 screen->addSubView( progEdit, point( 10, 100 ));
-	 glutIdleFunc( display);
 	 // end of windows problem
 
 	screen->addSubView( new ControlPane, point( 2, 2 ));
+
+	// iPod Nano screen size
+	screen->addSubView( new Pane( size( 176, 132 )), point( 200, 200 ));
 
 	// start the application -----------------------------
 	glutMainLoop();

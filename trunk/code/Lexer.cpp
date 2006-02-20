@@ -13,7 +13,7 @@ Lexer::Lexer()
 	{
 	opcodes.insert("clr");
 	opcodes.insert("move");
-//	opcodes.insert("lea");
+	opcodes.insert("lea");
 
 //	opcodes.insert("cmp");
 	opcodes.insert("add");
@@ -26,7 +26,7 @@ Lexer::Lexer()
 	opcodes.insert("eor");
 	opcodes.insert("not");
 	
-//	opcodes.insert("nop");
+	opcodes.insert("nop");
 	opcodes.insert("stop");
 	
 //	opcodes.insert("bra");
@@ -136,16 +136,16 @@ Token Lexer::next()
 		}
 	else if ( !token.text.empty() )	// command, opcode, or number base
 		{
-		if (( commands.find( token.text )) != commands.end() )
+/*		if (( commands.find( token.text )) != commands.end() )
 			token.type = Token::Command;
-		else if (( opcodes.find( token.text )) != opcodes.end() )
+		else*/ if (( opcodes.find( token.text )) != opcodes.end() )
 			token.type = Token::Opcode;
 		else if (( dataTypes.find( token.text )) != dataTypes.end() )
 			token.type = Token::DataType;
 		else if ( token.text == "hex" || token.text == "bin" || token.text == "dec" )
 			{
-			if ( line.get() == ':' )	// enforce separator
-				token.text += ':';
+			if ( line.peek() == ':' )	// enforce separator
+				token.text += line.get();
 			else
 				throw string("separate number base from digits with ':'");
 
@@ -182,13 +182,13 @@ Token Lexer::next()
 			switch ( c )
 				{
 				case ';':
-					token.type = Token::Comment;
 					{
 					string restOfLine;
 					getline( line, restOfLine );
 					token.text += restOfLine;
-					}
+					token.type = Token::Comment;
 					break;
+					}
 				case '+':
 					token.type = Token::Plus;
 					break;

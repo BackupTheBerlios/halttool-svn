@@ -1,14 +1,7 @@
 
-//#include <cstdlib>
-
 #include "MemoryView.h"
 #include "Color.h"
 #include "graphics.h"
-
-//matt 2-16-05
-//extern float M_PI;
-
-using namespace std;
 
 MemoryView::MemoryView( unsigned diameter )
 	: CircleView( diameter )

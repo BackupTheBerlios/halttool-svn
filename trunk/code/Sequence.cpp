@@ -75,30 +75,32 @@ void Sequence::translate()
 	static map < string, EncodeEntry > table;
 	static bool initialized = false;
 
-	if ( !initialized )
+	if ( ! initialized )
 		{
-		table["clr"]  = EncodeEntry ( 0x4240, (Method) &Sequence::asm_clr  );
-		table["move"] = EncodeEntry ( 0x3000, (Method) &Sequence::asm_move );
+		table["clr"]  = EncodeEntry( 0x4240, (Method) &Sequence::asm_clr  );
+		table["move"] = EncodeEntry( 0x3000, (Method) &Sequence::asm_move );
+		table["lea"]  = EncodeEntry( 0x41c0, (Method) &Sequence::asm_lea );
 
-		table["add"]  = EncodeEntry ( 0xd040, (Method) &Sequence::asm_add );
-		table["sub"]  = EncodeEntry ( 0x9040, (Method) &Sequence::asm_sub );
-		table["mul"]  = EncodeEntry ( 0xc1c0, (Method) &Sequence::asm_mul );
-		table["div"]  = EncodeEntry ( 0x81c0, (Method) &Sequence::asm_div );
+		table["add"]  = EncodeEntry( 0xd040, (Method) &Sequence::asm_add_sub );
+		table["sub"]  = EncodeEntry( 0x9040, (Method) &Sequence::asm_add_sub );
+		table["mul"]  = EncodeEntry( 0xc1c0, (Method) &Sequence::asm_mul_div );
+		table["div"]  = EncodeEntry( 0x81c0, (Method) &Sequence::asm_mul_div );
 
-		table["and"]  = EncodeEntry ( 0xc040, (Method) &Sequence::asm_and );
-		table["or"]   = EncodeEntry ( 0x8040, (Method) &Sequence::asm_or  );
-		table["eor"]  = EncodeEntry ( 0xb140, (Method) &Sequence::asm_eor );
-		table["not"]  = EncodeEntry ( 0x4640, (Method) &Sequence::asm_not );
+		table["and"]  = EncodeEntry( 0xc040, (Method) &Sequence::asm_and );
+		table["or"]   = EncodeEntry( 0x8040, (Method) &Sequence::asm_or  );
+		table["eor"]  = EncodeEntry( 0xb140, (Method) &Sequence::asm_eor );
+		table["not"]  = EncodeEntry( 0x4640, (Method) &Sequence::asm_not );
 		
-		table["stop"] = EncodeEntry ( 0x4e72, (Method) &Sequence::asm_stop );
+		table["nop"]  = EncodeEntry( 0x4e75, NULL );
+		table["stop"] = EncodeEntry( 0x4e72, NULL );
 
 		initialized = true;
 		}
 
 	// ------------------------------------------------------
 
-	if ( m_tokens.empty() )								// blank lines are okay
-		return;
+	if ( m_tokens.empty() || m_tokens.begin()->is( Token::Comment ))
+		return;	// blank lines are okay
 
 	m_tokens.push_back( Token::EndLine );				// should end up here after parse
 	token = m_tokens.begin();
@@ -190,16 +192,15 @@ void Sequence::translate()
 
 		else if ( token->is( Token::Opcode ))
 			{
-			//<matt> 2-18-05
 			const EncodeEntry& entry = table[token->text];
-			//</matt>
 			++token;
 
 			m_type = Word::Instruction;
 			m_code.push_back(0); // reserve space for unfinished opcode
 			opWord.bits = entry.signature;
-
-			(*this.*(entry.assemble))();
+			
+			if ( entry.assemble != NULL )
+				(*this.*(entry.assemble))();
 			
 			m_code[0] = opWord.bits;
 			}
@@ -290,6 +291,10 @@ EA Sequence::parseOperand()
 void Sequence::asm_clr()
 	{
 	EA dest = parseOperand();
+
+	if ( !dest.inCategory( EA::data | EA::alterable ))
+		throw string("destination must be alterable data");
+
 	opWord.insert( dest.reg, 0, 3 );
 	opWord.insert( dest.mode, 3, 3 );
 	}
@@ -304,14 +309,33 @@ void Sequence::asm_move()
 
 	EA dest = parseOperand();
 
-	if ( !dest.inCategory( EA::alterable ))
-		throw string("destination must be alterable");
+	if ( !dest.inCategory( EA::data | EA::alterable ))
+		throw string("destination must be alterable data");
 
 	opWord.insert( dest.mode, 6, 3 );
 	opWord.insert( dest.reg, 9, 3 );
 	}
 
-void Sequence::asm_add()
+void Sequence::asm_lea()
+	{
+	EA src = parseOperand();
+	if ( ! src.inCategory( EA::control ))
+		throw string("source must be a control addressing mode");
+	opWord.insert( src.reg, 0, 3 );
+	opWord.insert( src.mode, 3, 3 );
+
+	(token++)->mustBe( Token::Comma );
+
+	EA dest = parseOperand();
+	
+	if ( ! dest.mode == EA::AddressDirect )
+		throw string("destination must be an address register");
+
+	opWord.insert( dest.mode, 6, 3 );
+	opWord.insert( dest.reg, 9, 3 );
+	}
+
+void Sequence::asm_add_sub()
 	{
 	EA src = parseOperand();
 	(token++)->mustBe( Token::Comma );
@@ -335,42 +359,19 @@ void Sequence::asm_add()
 		throw string("at least one operand must be a data register");
 	}
 
-void Sequence::asm_sub()
+void Sequence::asm_mul_div()
 	{
 	EA src = parseOperand();
+	if ( ! src.inCategory( EA::data ))
+		throw string("source must be data, not address");
 	opWord.insert( src.reg, 0, 3 );
 	opWord.insert( src.mode, 3, 3 );
 
 	(token++)->mustBe( Token::Comma );
 
 	EA dest = parseOperand();
-	opWord.insert( dest.mode, 6, 3 );
-	opWord.insert( dest.reg, 9, 3 );
-	}
-
-void Sequence::asm_mul()
-	{
-	EA src = parseOperand();
-	opWord.insert( src.reg, 0, 3 );
-	opWord.insert( src.mode, 3, 3 );
-
-	(token++)->mustBe( Token::Comma );
-
-	EA dest = parseOperand();
-	opWord.insert( dest.mode, 6, 3 );
-	opWord.insert( dest.reg, 9, 3 );
-	}
-
-void Sequence::asm_div()
-	{
-	EA src = parseOperand();
-	opWord.insert( src.reg, 0, 3 );
-	opWord.insert( src.mode, 3, 3 );
-
-	(token++)->mustBe( Token::Comma );
-
-	EA dest = parseOperand();
-	opWord.insert( dest.mode, 6, 3 );
+	if ( ! dest.mode == EA::DataDirect )
+		throw string("destination must be a data register");
 	opWord.insert( dest.reg, 9, 3 );
 	}
 
@@ -403,14 +404,17 @@ void Sequence::asm_or()
 void Sequence::asm_eor()
 	{
 	EA src = parseOperand();
-	opWord.insert( src.reg, 0, 3 );
-	opWord.insert( src.mode, 3, 3 );
+	if ( ! src.mode == EA::DataDirect )
+		throw string("source must be a data register");
+	opWord.insert( src.reg, 9, 3 );
 
 	(token++)->mustBe( Token::Comma );
 
 	EA dest = parseOperand();
-	opWord.insert( dest.mode, 6, 3 );
-	opWord.insert( dest.reg, 9, 3 );
+	if ( ! dest.inCategory( EA::data | EA::alterable ))
+		throw string("destination must be alterable data");
+	opWord.insert( dest.reg, 0, 3 );
+	opWord.insert( dest.mode, 3, 3 );
 	}
 
 void Sequence::asm_not()
@@ -419,11 +423,3 @@ void Sequence::asm_not()
 	opWord.insert( dest.reg, 0, 3 );
 	opWord.insert( dest.mode, 3, 3 );
 	}
-
-void Sequence::asm_stop()
-	{
-	}
-
-void Sequence::asm_noop()
-{ //do we need this for implementing comments? prolly not
-}

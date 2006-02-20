@@ -212,11 +212,11 @@ void ProgramEditor::draw()
 
 	for ( unsigned i = 1; i <= m_program->lineCount(); ++i )
 		{
-//		if ( not m_program->line(i).success())
-//			{
-//			glColor4f( 1.0, 0.0, 0.0, 0.1 );
-//			highlight( i );
-//			}
+		if ( ! m_program->line(i).success())
+			{
+			glColor4f( 1.0, 0.0, 0.0, 0.5 );
+			drawText("-", point( 0, y ));
+			}
 
 		drawSourceCode( m_program->line(i).tokens(), point( margin, y ), 1.0 );
 		y += fontHeight + leading;

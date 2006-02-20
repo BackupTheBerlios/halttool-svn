@@ -21,7 +21,7 @@ class Lexer
 	std::set< std::string > dataTypes;
 
 public:
-	std::set< std::string > commands;
+//	std::set< std::string > commands;
 
 	Lexer();
 

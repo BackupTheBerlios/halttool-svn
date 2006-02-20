@@ -106,8 +106,8 @@ void reshape( int w, int h )
 
 void display()
 	{
-	 screen->draw();
-	 glutSwapBuffers();
+	screen->draw();
+	glutSwapBuffers();
 	}
 
 // --------------------------------------------------

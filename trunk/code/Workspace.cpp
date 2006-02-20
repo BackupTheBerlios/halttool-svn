@@ -25,7 +25,7 @@ void Workspace::draw()
 	glEnd();
  
 	//<matt>: "pretty prettier snowflakes" 2-18-06
-	const float SFSIZE = 3.0;
+	const float SFSIZE = 6.0;
 	if (snowflakes.size() == 0) //how many snowflakes?
 	// 0 is not snowing, 20 enough, 50 too much, 200 blizzard
 	{ for (int i = 0; i <= 50; i++)

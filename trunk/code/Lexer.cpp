@@ -13,7 +13,9 @@ Lexer::Lexer()
 	{
 	opcodes.insert("clr");
 	opcodes.insert("move");
+//	opcodes.insert("lea");
 
+//	opcodes.insert("cmp");
 	opcodes.insert("add");
 	opcodes.insert("sub");
 	opcodes.insert("mul");
@@ -24,9 +26,15 @@ Lexer::Lexer()
 	opcodes.insert("eor");
 	opcodes.insert("not");
 	
+//	opcodes.insert("nop");
 	opcodes.insert("stop");
 	
+//	opcodes.insert("bra");
+//	opcodes.insert("beq");
+//	opcodes.insert("bne");
+	
 	dataTypes.insert("word");
+	// No more data types for the pure 16-bit version!
 	}
 
 void Lexer::operator << ( string s )

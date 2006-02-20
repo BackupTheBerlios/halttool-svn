@@ -42,7 +42,8 @@ void keyboard( unsigned char key, int x, int y )
 		#ifdef __APPLE__
 			case 0x08:	key = deleteKey;		break;
 			case 0x7f:	key = backspaceKey;		break;
-		#else
+		#else //running on a windows PC or Linux
+				//this could cause trouble if we are running Linux on a Mac
 			case 0x7f:	key = deleteKey;		break;
 			case 0x08:	key = backspaceKey;		break;
 		#endif

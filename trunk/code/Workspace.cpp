@@ -26,7 +26,8 @@ void Workspace::draw()
  
 	//<matt>: "pretty prettier snowflakes" 2-18-06
 	const float SFSIZE = 3.0;
-	if (snowflakes.size() == 0) 
+	if (snowflakes.size() == 0) //how many snowflakes?
+	// 0 is not snowing, 20 enough, 50 too much, 200 blizzard
 	{ for (int i = 0; i <= 50; i++)
 	  snowflakes.push_back
 	  (snowflake(rand()%bounds.w, rand()%bounds.h, rand()%360, ((rand()%2)-1.0)/5.0, ((rand()%2)-1.0)/5.0));
@@ -44,7 +45,9 @@ void Workspace::draw()
 	 
 	 glPushMatrix();
 	 glTranslatef(snowflakes[i].px, snowflakes[i].py, 0.0);
-	 glRotatef(snowflakes[i].rz, 0.0, 0.0, 1.0);
+	 //which is pretier? I think the 2nd one is
+	 //glRotatef(snowflakes[i].rz, 0.0, 0.0, 1.0);
+	 glRotatef(snowflakes[i].rz, 1.0, 0.0, 1.0);
 	 glBegin( GL_TRIANGLES );
 	  glColor3f( 1.0, 1.0, 1.0 );
 	  glVertex2f( - SFSIZE, + SFSIZE);

@@ -2,9 +2,6 @@
 #include "Color.h"
 #include "graphics.h"
 
-//matt 2-16-05
-//extern float M_PI;
-
 std::map< std::string, Color > Color::palette;
 
 

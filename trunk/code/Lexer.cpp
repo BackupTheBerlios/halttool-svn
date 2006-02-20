@@ -1,3 +1,9 @@
+// Matt's Stuff I want Feb 19, 2006:
+//  BRA, BSR, CMP Compare, JMP, JSR, LEA, 
+//  NOP, ROL, ROR, RTS, TRAP
+
+// datatypes: byte, char (masqueraded byte), long
+ // (can be delayed indefinitely, req changes to the stack)
 
 #include "Lexer.h"
 

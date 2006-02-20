@@ -1,3 +1,8 @@
+//////////////////////////////////////////////////////////
+// Bitfield allows packing and unpacking of bits 
+//  Each bitfield object holds sizeof short * 8 
+//  16 bits on most systems
+// (be careful, may not be portable)
 
 #ifndef halt_BitField
 #define halt_BitField

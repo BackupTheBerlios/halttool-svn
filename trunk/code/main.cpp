@@ -149,7 +149,6 @@ int main( int argc, char* argv[] )
 	// create the interface ------------------------------
 	screen = new Workspace( size( glutGet( GLUT_WINDOW_WIDTH ),
 								  glutGet( GLUT_WINDOW_HEIGHT )));
-	mouseTarget = screen;
 
 	screen->addSubView( new MemoryView( 300 ), point( 50, 50 ));
 	screen->addSubView( new ProcessorView( 128 ), point( 200, 50 ));
@@ -160,8 +159,8 @@ int main( int argc, char* argv[] )
 
 	screen->addSubView( new ControlPane, point( 2, 2 ));
 
-	// iPod Nano screen size
-	screen->addSubView( new Pane( size( 176, 132 )), point( 200, 200 ));
+	mouseTarget = screen;
+	keyTarget = progEdit;
 
 	// start the application -----------------------------
 	glutMainLoop();

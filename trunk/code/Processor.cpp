@@ -85,6 +85,7 @@ Object::Method Processor::decode()
 		{ "eor",  0xb140, 0xf1c0, (Method) &Processor::exec_eor },
 		{ "not",  0x4640, 0xffc0, (Method) &Processor::exec_not },
 
+		{ "nop",  0x4e75, 0xffff, (Method) &Processor::exec_nop },
 		{ "stop", 0x4e72, 0xffff, (Method) &Processor::exec_stop },
 
 		{ "???", 0, 0, (Method) &Processor::exec_undefined }
@@ -199,51 +200,60 @@ void Processor::exec_div()
 
 void Processor::exec_and()
 	{
-	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
-	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+	throw string("under construction");
 
-	short result = src.read() & dest.read();
-
-	dest.write( result );
-	setFlags( result );
+//	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
+//	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+//
+//	short result = src.read() & dest.read();
+//
+//	dest.write( result );
+//	setFlags( result );
 	}
 
 void Processor::exec_or()
 	{
-	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
-	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+	throw string("under construction");
 
-	short result = src.read() | dest.read();
-
-	dest.write( result );
-	setFlags( result );
+//	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
+//	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+//
+//	short result = src.read() | dest.read();
+//
+//	dest.write( result );
+//	setFlags( result );
 	}
 
 void Processor::exec_eor()
 	{
-	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
-	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+	throw string("under construction");
 
-	short result = src.read() ^ dest.read();
-
-	dest.write( result );
-	setFlags( result );
+//	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
+//	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+//
+//	short result = src.read() ^ dest.read();
+//
+//	dest.write( result );
+//	setFlags( result );
 	}
 
 void Processor::exec_not()
 	{
-	Reference dest( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
+	throw string("under construction");
 
-	short result = ~ dest.read();
-
-	dest.write( result );
-	setFlags( result );
+//	Reference dest( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
+//
+//	short result = ~ dest.read();
+//
+//	dest.write( result );
+//	setFlags( result );
 	}
+
+void Processor::exec_nop()
+	{ /* do nothing! */ }
 
 void Processor::exec_stop()
-	{
-	m_running = false;
-	}
+	{ m_running = false; }
 
 void Processor::exec_undefined()
-	{ throw string("Processor::exec_undefined"); }
+	{ throw string("weird opcode -- oops!"); }

@@ -52,6 +52,7 @@ private:
 	void exec_eor();
 	void exec_not();
 	
+	void exec_nop();
 	void exec_stop();
 	
 	void exec_undefined();

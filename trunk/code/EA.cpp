@@ -1,4 +1,3 @@
-// What is this? Please write a short description for EA
 
 #include <string>
 

@@ -2,15 +2,20 @@
 #ifndef halt_EA
 #define halt_EA
 
+// Writing code to handle all combinations of addressing modes for all
+// instructions, both at translation-time and run-time, would be cumbersome
+// and error prone. EA allows us to build or manipulate operands,
+// while Reference lets us use them. Reference is an EA in action.
+
 struct EA
 	{
 	enum Mode
 		{
-		DataDirect,			// Dn
-		AddressDirect,		// An
-		AddressIndirect,	// (An)
-		PostIncrement,		// (An)+
-		PreDecrement,		// -(An)
+		DataDirect,			// d?
+		AddressDirect,		// a?
+		AddressIndirect,	// (a?)
+		PostIncrement,		// (a?)+
+		PreDecrement,		// -(a?)
 		Absolute,			// (label) or (hex:100)
 		Immediate,			// 1234
 	//----------------------//

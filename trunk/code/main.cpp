@@ -155,13 +155,8 @@ int main( int argc, char* argv[] )
 	screen->addSubView( new ProcessorView( 128 ), point( 200, 50 ));
 
 	ProgramEditor* progEdit = new ProgramEditor;
-	
-	// Matt: "Windows Exception is in these two lines!!"
-//	 Program * someprog = new Program;
-//	 progEdit->program( someprog );
-	 progEdit->program( new Program );
-	 screen->addSubView( progEdit, point( 10, 100 ));
-	 // end of windows problem
+	progEdit->program( new Program );
+	screen->addSubView( progEdit, point( 10, 100 ));
 
 	screen->addSubView( new ControlPane, point( 2, 2 ));
 

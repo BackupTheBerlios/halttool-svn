@@ -8,12 +8,14 @@ Workspace::Workspace( size s )
 	: View( s )
 	{ }
 
+// <matt>
 	struct snowflake
 	{ float px, py, rz, dx, dy;
 	  snowflake(float x, float y, float r, float vx, float vy) :
 		px(x), py(y), rz(r), dx(vx), dy(vy) {}
 	};
 	std::vector< snowflake > snowflakes;
+// </matt>
 
 void Workspace::draw()
 	{
@@ -32,6 +34,8 @@ void Workspace::draw()
 		glColor3f( 0.1, 0.2, 0.4 );
 		glVertex2i( 0, bounds.h );
 	glEnd();
+
+	endLocal();
 
 //<matt>: "pretty prettier snowflakes" 2-18-06
 const float SFSIZE = 3.0;
@@ -72,7 +76,5 @@ for (int i = 0; i < snowflakes.size(); i++)
  glPopMatrix();
 }
 //</matt> snowflakes
-
-	endLocal();
 	drawSubViews();
 	}

@@ -4,6 +4,9 @@
 #include "Memory.h"
 #include "Color.h"
 #include "graphics.h"
+#include <iostream>
+#include <iomanip>
+using namespace std;
 
 SystemView::SystemView( unsigned diameter )
 	: CircleView( diameter ), m_cpuScale( 0.4 )
@@ -11,6 +14,49 @@ SystemView::SystemView( unsigned diameter )
 
 View* SystemView::click( point p )
 	{
+	// find the vector from the center to the clicked point
+	float radius = bounds.w / 2.0;
+	float x = ( p.x - radius ) / radius;
+	float y = ( p.y - radius ) / radius;
+
+	// vector magnitude
+	float dist = sqrt( x*x + y*y );
+
+	// normalize
+	x /= dist;
+	y /= dist;
+
+	// determine the angle (HALT coordinates)
+	float angle = acos( -y );
+	if ( x >= 0 )
+		angle /= 2 * M_PI;
+	else
+		angle = ( M_PI - angle ) / ( 2 * M_PI ) + 0.5;
+
+	// what was picked?
+	if ( dist < m_cpuScale ) // inside the Processor area
+		{
+		if ( angle >= 0.1 && angle < 0.9 )
+			{
+			unsigned reg = static_cast< unsigned >( angle * 10 ) - 1;
+			cout << "you picked register d" << reg << endl;
+			}
+		}
+	else
+		{
+		const float memBegin = m_angleStep / 2;
+		const float memEnd = memBegin + g_mem.size() / m_spaces;
+
+		if ( angle >= memBegin && angle < memEnd )
+			{
+			unsigned short address =
+				static_cast< unsigned short >
+					((angle - memBegin) * m_spaces );
+
+			cout << "you picked memory word hex:" << hex << address << endl;
+			}
+		}
+
 	parent->bringSubViewToFront( this );
 	return this;
 	}
@@ -30,12 +76,13 @@ void SystemView::draw()
 	// draw Memory
 		{
 		const unsigned memSize = g_mem.size();
-		const float spaces = memSize + 4.0;
-		const float circleRadius = 0.6 * M_PI / spaces;
-		const float pathRadius = 0.9 - circleRadius;
-		const float angleStep = 1.0 / spaces;
 
-		float angle = angleStep;
+		m_spaces = memSize + 4.0;
+		m_circleRadius = 0.6 * M_PI / m_spaces;
+		m_pathRadius = 0.9 - m_circleRadius;
+		m_angleStep = 1.0 / m_spaces;
+
+		float angle = m_angleStep;
 
 		for ( unsigned addr = 0; addr < memSize; ++addr )
 			{
@@ -63,24 +110,24 @@ void SystemView::draw()
 					Color().set();
 				}
 
-			gotoPoint( angle, pathRadius );
-				drawCircle( circleRadius, outline );
+			gotoPoint( angle, m_pathRadius );
+				drawCircle( m_circleRadius, outline );
 			glPopMatrix();
 			
-			angle += angleStep;
+			angle += m_angleStep;
 			}
 
 		Color().set(); // default color
 		glPointSize( 3 );
 
 		// unused address space
-		drawPoint(( memSize + 1.0 ) / spaces, pathRadius );
-		drawPoint(( memSize + 2.0 ) / spaces, pathRadius );
-		drawPoint(( memSize + 3.0 ) / spaces, pathRadius );
+		drawPoint(( memSize + 1.0 ) / m_spaces, m_pathRadius );
+		drawPoint(( memSize + 2.0 ) / m_spaces, m_pathRadius );
+		drawPoint(( memSize + 3.0 ) / m_spaces, m_pathRadius );
 
 		// begin / end boundary
 		glLineWidth( 2 );
-		drawLine( 0, pathRadius - 0.1, pathRadius + 0.1 );
+		drawLine( 0, m_pathRadius - 0.1, m_pathRadius + 0.1 );
 		glLineWidth( 1 ); // back to the default -- could push/pop
 		}
 

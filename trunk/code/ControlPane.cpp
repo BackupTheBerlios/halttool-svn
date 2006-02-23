@@ -36,7 +36,6 @@ void ControlPane::reset( Object* sender )
 	g_timer.rate( 10.0 ); // hertz
 
 	g_cpu.reset();
-	g_cpu.start();
 	
 	glutPostRedisplay();
 	}
@@ -46,9 +45,12 @@ void ControlPane::step( Object* sender )
 	// If a program is running, continue it.
 	// The user can also force a step.
 
+	if ( ! g_timer.enabled()) // user initiated step
+		g_timer.tick();
+
 	g_cpu.step();
 
-	if ( ! g_cpu.running())
+	if ( ! g_cpu.smoothSailing())
 		g_timer.stop();
 
 	glutPostRedisplay();

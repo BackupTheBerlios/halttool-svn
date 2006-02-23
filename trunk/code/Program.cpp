@@ -5,14 +5,14 @@
 
 using namespace std;
 
-// const string DocumentPath("/Users/merwin/Develop/HALT/programs/");
+const string DocumentPath("/Users/merwin/Develop/halt/examples/");
 
 Program::Program(string name)
 	: m_name(name)
 	{
 	if ( ! m_name.empty())
 		{
-		ifstream file(( /* DocumentPath + */ m_name + ".s").c_str());
+		ifstream file(( DocumentPath + m_name + ".s").c_str());
 
 		if ( file.is_open() )
 			{

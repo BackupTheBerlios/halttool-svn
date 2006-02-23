@@ -21,6 +21,8 @@ class Processor : public Object
 	
 	bool negative;
 	bool zero;
+
+	bool m_error;
 	bool m_running;
 
 public:
@@ -29,10 +31,9 @@ public:
 	unsigned age( unsigned short address ) const;
 	
 	void reset();
-	void start();
 	void step();
 
-	bool running();
+	bool smoothSailing();
 
 private:
 	short fetch();
@@ -41,6 +42,7 @@ private:
 
 	void exec_clr();
 	void exec_move();
+	void exec_lea();
 
 	void exec_add();
 	void exec_sub();

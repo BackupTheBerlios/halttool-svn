@@ -19,6 +19,7 @@ public:
 
 	void sizeToFit();
 	void highlight( unsigned lineNumber );
+	void mark( unsigned lineNumber );
 
 	View* click( point );
 	void drag( int dx, int dy );

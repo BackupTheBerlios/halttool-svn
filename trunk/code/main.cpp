@@ -3,8 +3,7 @@
 #include "Color.h"
 #include "Workspace.h"
 #include "ProgramEditor.h"
-#include "MemoryView.h"
-#include "ProcessorView.h"
+#include "SystemView.h"
 #include "ControlPane.h"
 
 // globals -----------------------------------------
@@ -135,7 +134,7 @@ int main( int argc, char* argv[] )
 	glutMouseFunc( mouse );
 	glutMotionFunc( motion );
 
-	glutIdleFunc( display ); // for snowflakes
+//	glutIdleFunc( display ); // for snowflakes
 
 	initGL();
 
@@ -150,14 +149,13 @@ int main( int argc, char* argv[] )
 	screen = new Workspace( size( glutGet( GLUT_WINDOW_WIDTH ),
 								  glutGet( GLUT_WINDOW_HEIGHT )));
 
-	screen->addSubView( new MemoryView( 300 ), point( 50, 50 ));
-	screen->addSubView( new ProcessorView( 128 ), point( 200, 50 ));
+	screen->addSubView( new SystemView( 350 ), point( 20, 20 ));
+
+	screen->addSubView( new ControlPane, point( 400, 20 ));
 
 	ProgramEditor* progEdit = new ProgramEditor;
-	progEdit->program( new Program );
-	screen->addSubView( progEdit, point( 10, 100 ));
-
-	screen->addSubView( new ControlPane, point( 2, 2 ));
+	progEdit->program( new Program("test"));
+	screen->addSubView( progEdit, point( 400, 90 ));
 
 	mouseTarget = screen;
 	keyTarget = progEdit;

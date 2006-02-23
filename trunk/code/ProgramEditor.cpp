@@ -1,9 +1,10 @@
 
 #include "ProgramEditor.h"
+#include "Memory.h"
+#include "Color.h"
 #include "source_highlight.h"
 #include "graphics.h"
 #include "utility.h"
-#include "Memory.h"
 
 using namespace std;
 
@@ -42,6 +43,14 @@ void ProgramEditor::highlight( unsigned lineNumber )
 	rect (
 		point( 0, (lineNumber - 1) * (fontHeight + leading) + margin - leading / 2 ),
 		size( bounds.w, fontHeight + leading )
+		).fill();
+	}
+
+void ProgramEditor::mark( unsigned lineNumber )
+	{
+	rect (
+		point( 0, (lineNumber - 1) * (fontHeight + leading) + margin - leading / 2 ),
+		size( margin / 2, fontHeight + leading )
 		).fill();
 	}
 
@@ -201,7 +210,9 @@ void ProgramEditor::draw()
 			glVertex2i( x - 1, y );
 			glVertex2i( x, y + 1 );
 			glVertex2i( x + 1, y );
-		y += fontHeight + leading - 1;
+
+			y += fontHeight + leading - 1;
+
 			glVertex2i( x - 1, y );
 			glVertex2i( x, y - 1 );
 			glVertex2i( x + 1, y );
@@ -212,13 +223,15 @@ void ProgramEditor::draw()
 
 	for ( unsigned i = 1; i <= m_program->lineCount(); ++i )
 		{
-		if ( ! m_program->line(i).success())
+		const Sequence& line = m_program->line(i);
+		if ( ! line.success())
 			{
-			glColor4f( 1.0, 0.0, 0.0, 0.5 );
-			drawText("-", point( 0, y ));
+			Color::palette["error"].set();
+			mark( i );
 			}
 
-		drawSourceCode( m_program->line(i).tokens(), point( margin, y ), 1.0 );
+		
+		drawSourceCode( line.tokens(), point( margin, y ), 1.0 );
 		y += fontHeight + leading;
 		}
 

@@ -14,6 +14,7 @@ class Memory
 public:
 	void clear();
 	
+	// append "things" to memory
 	void operator << ( const Sequence& );
 	void operator << ( const Program& );
 

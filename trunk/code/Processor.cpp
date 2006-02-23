@@ -8,9 +8,9 @@ using namespace std;
 Processor g_cpu;
 
 Processor::Processor()
-	: ir(0), pc(0), zero(true), m_running(false)
 	{
 	regs << Sequence("word[8]");
+	reset();
 	}
 
 unsigned Processor::age( unsigned short address ) const
@@ -32,14 +32,14 @@ void Processor::reset()
 	setFlags( 0 );
 	}
 
-void Processor::start()
-	{ m_running = true; }
-
-bool Processor::running()
-	{ return m_running; }
+bool Processor::smoothSailing()
+	{ return m_running && ! m_error; }
 
 void Processor::step()
 	{
+	m_running = true;
+	m_error = false;
+
 	try {
 		ir = fetch();
 		Method execute = decode();
@@ -51,7 +51,7 @@ void Processor::step()
 	catch ( string message )
 		{
 		cerr << "<run> " << message << endl;
-		m_running = false;
+		m_error = true;
 		}
 	}
 
@@ -74,6 +74,7 @@ Object::Method Processor::decode()
 
 		{ "clr",  0x4240, 0xffc0, (Method) &Processor::exec_clr },
 		{ "move", 0x3000, 0xf000, (Method) &Processor::exec_move },
+		{ "lea",  0x41c0, 0xf1c0, (Method) &Processor::exec_lea },
 
 		{ "add",  0xd040, 0xf0c0, (Method) &Processor::exec_add },
 		{ "sub",  0x9040, 0xf0c0, (Method) &Processor::exec_sub },
@@ -122,6 +123,17 @@ void Processor::exec_clr()
 	}
 
 void Processor::exec_move()
+	{
+	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
+	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+
+	short result = src.read();
+	dest.write( result );
+	
+	setFlags( result );
+	}
+
+void Processor::exec_lea()
 	{
 	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
 	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));

@@ -27,6 +27,7 @@ public:
 	void start();
 	void stop();
 
+	void tick();
 	unsigned ticks();
 
 //	---------------

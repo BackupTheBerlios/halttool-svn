@@ -14,6 +14,7 @@ protected:
 
 public:
 	Word( short v = 0, Type t = Unknown );
+	~Word();
 
 	short read() const;
 	void write( short );
@@ -23,5 +24,7 @@ public:
 	short peek() const;
 	void touch();
 	};
+
+extern Word* g_infoWord;
 
 #endif

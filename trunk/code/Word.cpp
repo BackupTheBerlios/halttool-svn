@@ -2,9 +2,17 @@
 #include "Word.h"
 #include "Timer.h"
 
+Word* g_infoWord;
+
 Word::Word( short v, Type t )
 	: m_value(v), m_type(t), m_timestamp(g_timer.ticks())
 	{ }
+
+Word::~Word()
+	{
+	if ( g_infoWord == this )
+		g_infoWord = NULL;		// clean up dangling pointer
+	}
 
 short Word::read() const
 	{

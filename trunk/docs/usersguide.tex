@@ -23,6 +23,27 @@
 \begin{document}
 \maketitle
 \tableofcontents
+\newpage
+\begin{center}
+\textsc{This page intentionally left blank.} \end{center}
+\newpage
+\section*{Preface}
+  \addcontentsline{toc}{section}{Preface}
+This document utilizes many hyperlinks to other resources. If you
+are reading a hard copy, you are not making full use of this guide.
+Please retrieve the latest electronic version in PDF format from the
+project website, at
+\href{http://halttool.berlios.de}{http://halttool.berlios.de} There
+you can also find Frequently asked questions, screenshots of the
+latest development version, project news, stable version releases,
+and more.\\
+Also, you may be interested to visit the project code forge hosted
+at BerliOS, available at
+\href{http://developer.berlios.de/projects/halttool}{http://developer.berlios.de/projects/halttool}.
+This is an even more extensive website where you can download any
+previous release, view screenshots of the development version, join
+user mailing lists, report and track bugs, browse code from any
+previous development period, and participate in HALT public forum discussions.\\
 
 \section*{Introduction}
   \addcontentsline{toc}{section}{Introduction}
@@ -49,6 +70,11 @@ environment, as it follows the KISS principle: Make everything as
 simple as possible, but no simpler. The bright and simple display of
 information make the user interface a fun and powerful way to learn
 and develop Motorola 68000 assembly language code.
+
+HALT is also a tool for developers. HALT produces only machine
+instructions which are in a strict subset of the Motorola 68000
+machine instruction set. Therefore, any program in HALT should also
+run on any machine that implements the basic 68000 instruction set.
 
 \section*{Obtaining HALT}
   \addcontentsline{toc}{section}{Obtaining HALT}
@@ -102,17 +128,68 @@ at the command line.
 
 \subsection*{Program Editor}
   \addcontentsline{toc}{subsection}{Program Editor}
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[scale=1.0]{proged1.png}
+    \caption{Program Control and Program Editor Panes}
+  \end{center}
+\end{figure}
 The program editor is where you will write and edit all Motorola
 68000 instructions. It represented by a square box with an I-beam
 cursor. As you type your instructions into the Program Editor, you
 can observe the effect that they have on the system's stack space
-\subsection*{Memory Viewer}
-  \addcontentsline{toc}{subsection}{Memory Viewer}
-\subsection*{Register Inspector}
-  \addcontentsline{toc}{subsection}{Register Inspector}
+within the Memory and Register viewer.
+
+\subsection*{Memory and Register Viewer}
+  \addcontentsline{toc}{subsection}{Memory and Register Viewer}
+The stack space is represented by the outer ring of circles in our
+memory viewer. Commands are represented by Green circles, Data
+members by Blue circles, and other Op-codes by Orange circles. The
+pipe $|$ delimits the start and end of the system stack. The system
+stack space between the last element of the front of the stack, and
+the first element in the end of the stack is irrelevant to the
+programmer, so it is not shown. Instead it is represented by an
+ellipsis ($\ldots$).\\
+Data Registers are represented similarly, as the inner ring of Blue
+circles. Starting at the $|$ and traversing the ring
+counter-clockwise, the registers are arranged in ascending order
+from d0 to d7. \\
+Both registers and memory locations exhibit ``glowing''. As the
+amount of time since their last access increases, they become
+darker. A quick glance at the memory and register Viewer will
+indicate which registers and memory locations are currently
+active.\\
+
+\begin{figure}[hp]
+  \begin{center}
+    \includegraphics[scale=0.5]{memview1.png}
+    \caption{HALT's Memory and Register Viewer}
+  \end{center}
+\end{figure}
+
+\subsection*{Memory and Register Inspector}
+  \addcontentsline{toc}{subsection}{Memory and Register Inspector}
+At any point, you can click on a memory cell or a register cell, and
+a new window, the Memory and Register Inspector, will appear. It
+displays the contents of the currently selected memory location, as
+well as its type and how many clock cycles ago it was touched.
 
 \subsection*{Virtual Machine}
   \addcontentsline{toc}{subsection}{Virtual Machine}
+The Virtual Machine is controlled directly through the Control pane.
+The Reset button sets the program counter to the first line of the
+program. The Step button steps through the program a single line at
+a time, for debugging purposes. Finally, the Green button runs the
+entire program without interruption until either a stop instruction
+or a runtime error is reached. The control panel pane is shown here
+in the same figure as the Program Editor pane.\\
+As for the specifications of the virtual machine, the stack space
+consists of an arbitrarily large amount of memory. Like the Motorola
+68000 architecture, eight data registers (d0, d1, $\ldots$ d7) of
+length 16-bits, and eight address registers (a0, a1, $\ldots$ a7) of
+length 32-bits are provided. Additionally, several status bit
+registers are provided. They are ``Z''ero, ``C''arry, o``V''erflow,
+e``X''tend, and ``N''egative.
 
 \section*{Addressing Modes}
   \addcontentsline{toc}{section}{Addressing Modes}
@@ -348,10 +425,13 @@ considered a label. Labels should be unique, and may be used in
 logical branch instructions (BRA, BLE, BLT, BGE, BGT, BNE). Labels
 are used to define variables or to provide control points for loops.
 
-\section*{Developer's Notes}
-  \addcontentsline{toc}{section}{Developer's Notes}
-\subsection*{Class Dependencies}
-  \addcontentsline{toc}{subsection}{Class Hierarchy}
-\includegraphics[scale=0.5]{halt-classes.png}
+\section*{HALT Developer's Notes}
+  \addcontentsline{toc}{section}{HALT Developer's Notes}
+\begin{figure}[hp]
+  \begin{center}
+    \includegraphics[scale=1.0]{halt-classes.png}
+    \caption{Class Dependencies Diagram}
+  \end{center}
+\end{figure}
 
 \end{document}

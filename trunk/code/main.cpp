@@ -134,7 +134,7 @@ int main( int argc, char* argv[] )
 	glutMouseFunc( mouse );
 	glutMotionFunc( motion );
 
-	glutIdleFunc( display ); // for snowflakes
+	//glutIdleFunc( display ); // for snowflakes
 
 	initGL();
 

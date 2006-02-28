@@ -17,10 +17,9 @@ class Processor : public Object
 
 	std::string mnemonic;	// current instruction
 	BitField ir;			// instruction register
+	BitField sr;			// status register
 	unsigned short pc;		// program counter
 	
-	bool negative;
-	bool zero;
 
 	bool m_error;
 	bool m_running;
@@ -28,7 +27,12 @@ class Processor : public Object
 public:
 	Processor();
 
-	unsigned age( unsigned short address ) const;
+	// data registers
+	const Word& reg( unsigned short address ) const;
+
+	// status flags
+	bool negative() const;
+	bool zero() const;
 	
 	void reset();
 	void step();

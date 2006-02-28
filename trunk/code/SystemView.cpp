@@ -4,8 +4,10 @@
 #include "Memory.h"
 #include "Color.h"
 #include "graphics.h"
-#include <iostream>
+#include "text.h"
+
 #include <iomanip>
+#include <sstream>
 using namespace std;
 
 SystemView::SystemView( unsigned diameter )
@@ -26,7 +28,7 @@ View* SystemView::click( point p )
 	x /= dist;
 	y /= dist;
 
-	// determine the angle (HALT coordinates)
+	// determine the angle (in HALT coordinates)
 	float angle = acos( -y );
 	if ( x >= 0 )
 		angle /= 2 * M_PI;
@@ -38,8 +40,18 @@ View* SystemView::click( point p )
 		{
 		if ( angle >= 0.1 && angle < 0.9 )
 			{
-			unsigned reg = static_cast< unsigned >( angle * 10 ) - 1;
-			cout << "you picked register d" << reg << endl;
+			unsigned reg = static_cast< unsigned > ( angle * 10 ) - 1;
+
+			ostringstream ss;
+			ss << 'd' << reg;
+
+			g_infoWord = &g_cpu.reg( reg );
+			g_infoWordName = ss.str();
+			}
+		else
+			{
+			g_infoWord = NULL;
+			g_infoWordName = "";
 			}
 		}
 	else
@@ -49,15 +61,23 @@ View* SystemView::click( point p )
 
 		if ( angle >= memBegin && angle < memEnd )
 			{
-			unsigned short address =
-				static_cast< unsigned short >
+			unsigned short address = static_cast< unsigned short >
 					((angle - memBegin) * m_spaces );
 
-			cout << "you picked memory word hex:" << hex << address << endl;
+			ostringstream ss;
+			ss << "(hex:" << hex << address << ")";
+
+			g_infoWord = &g_mem.word( address );
+			g_infoWordName = ss.str();
+			}
+		else
+			{
+			g_infoWord = NULL;
+			g_infoWordName = "";
 			}
 		}
 
-	parent->bringSubViewToFront( this );
+	glutPostRedisplay();
 	return this;
 	}
 
@@ -86,7 +106,7 @@ void SystemView::draw()
 
 		for ( unsigned addr = 0; addr < memSize; ++addr )
 			{
-			const Word& word = g_mem.peek( addr );
+			const Word& word = g_mem.word( addr );
 			float intensity;
 
 			switch ( word.age())
@@ -145,10 +165,11 @@ void SystemView::draw()
 
 		float angle = 1.5 * angleStep;
 
+		// draw registers
 		for ( unsigned reg = 0; reg <= 7; ++reg )
 			{
 			float intensity;
-			switch ( g_cpu.age( reg ))
+			switch ( g_cpu.reg( reg ).age())
 				{
 				case 0: intensity = 1.0; break;
 				case 1: intensity = 0.8; break;
@@ -164,5 +185,16 @@ void SystemView::draw()
 			
 			angle += angleStep;
 			}
+		
+		// use pixel coordinates
+		endLocal();
+		View::beginLocal();
+
+		// draw status flags
+		glColor4f( 1, 1, 1, ( g_cpu.negative() ? 0.75 : 0.25 ));
+		drawText("N", point( bounds.w / 2 - fontWidth, (bounds.h - fontHeight) / 2 ));
+
+		glColor4f( 1, 1, 1, ( g_cpu.zero() ? 0.75 : 0.25 ));
+		drawText("Z", point( bounds.w / 2, (bounds.h - fontHeight) / 2 ));
 		}
 	}

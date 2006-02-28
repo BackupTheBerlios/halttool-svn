@@ -15,13 +15,13 @@ void BitField::insert( short newValue, unsigned pos, unsigned numBits )
 	bits = ( bits & ~( mask << pos )) | (( newValue & mask ) << pos );
 	}
 
-short BitField::extract( unsigned pos, unsigned numBits )
+short BitField::extract( unsigned pos, unsigned numBits ) const
 	{
 	short mask = 0xffff >> ( 16 - numBits );
 	return ( bits >> pos ) & mask;
 	}
 
-short BitField::extend( unsigned pos, unsigned numBits )
+short BitField::extend( unsigned pos, unsigned numBits ) const
 	{
 	short mask = 0xffff >> ( 16 - numBits );
 	short xtend = ( bits >> pos ) & mask;

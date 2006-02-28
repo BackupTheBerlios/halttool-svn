@@ -86,8 +86,8 @@ void Sequence::translate()
 		table["mul"]  = EncodeEntry( 0xc1c0, (Method) &Sequence::asm_mul_div );
 		table["div"]  = EncodeEntry( 0x81c0, (Method) &Sequence::asm_mul_div );
 
-		table["and"]  = EncodeEntry( 0xc040, (Method) &Sequence::asm_and );
-		table["or"]   = EncodeEntry( 0x8040, (Method) &Sequence::asm_or  );
+		table["and"]  = EncodeEntry( 0xc040, (Method) &Sequence::asm_and_or );
+		table["or"]   = EncodeEntry( 0x8040, (Method) &Sequence::asm_and_or );
 		table["eor"]  = EncodeEntry( 0xb140, (Method) &Sequence::asm_eor );
 		table["not"]  = EncodeEntry( 0x4640, (Method) &Sequence::asm_not );
 		
@@ -331,7 +331,6 @@ void Sequence::asm_lea()
 	if ( ! dest.mode == EA::AddressDirect )
 		throw string("destination must be an address register");
 
-	opWord.insert( dest.mode, 6, 3 );
 	opWord.insert( dest.reg, 9, 3 );
 	}
 
@@ -375,30 +374,17 @@ void Sequence::asm_mul_div()
 	opWord.insert( dest.reg, 9, 3 );
 	}
 
-void Sequence::asm_and()
+void Sequence::asm_and_or()
 	{
-	EA src = parseOperand();
-	opWord.insert( src.reg, 0, 3 );
-	opWord.insert( src.mode, 3, 3 );
-
-	(token++)->mustBe( Token::Comma );
-
-	EA dest = parseOperand();
-	opWord.insert( dest.mode, 6, 3 );
-	opWord.insert( dest.reg, 9, 3 );
-	}
-
-void Sequence::asm_or()
-	{
-	EA src = parseOperand();
-	opWord.insert( src.reg, 0, 3 );
-	opWord.insert( src.mode, 3, 3 );
-
-	(token++)->mustBe( Token::Comma );
-
-	EA dest = parseOperand();
-	opWord.insert( dest.mode, 6, 3 );
-	opWord.insert( dest.reg, 9, 3 );
+//	EA src = parseOperand();
+//	opWord.insert( src.reg, 0, 3 );
+//	opWord.insert( src.mode, 3, 3 );
+//
+//	(token++)->mustBe( Token::Comma );
+//
+//	EA dest = parseOperand();
+//	opWord.insert( dest.mode, 6, 3 );
+//	opWord.insert( dest.reg, 9, 3 );
 	}
 
 void Sequence::asm_eor()
@@ -420,6 +406,8 @@ void Sequence::asm_eor()
 void Sequence::asm_not()
 	{
 	EA dest = parseOperand();
+	if ( ! dest.inCategory( EA::data | EA::alterable ))
+		throw string("destination must be alterable data");
 	opWord.insert( dest.reg, 0, 3 );
 	opWord.insert( dest.mode, 3, 3 );
 	}

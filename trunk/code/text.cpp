@@ -20,3 +20,9 @@ void drawText( string s, point p )
 	for ( int i = 0; i < len; ++i )
 		glutBitmapCharacter( font, s[i]);
 	}
+
+void drawText( string s, unsigned lineNumber, unsigned column )
+	{
+	drawText( s, point( margin + column * fontWidth,
+		margin + (lineNumber - 1) * (fontHeight + leading )));
+	}

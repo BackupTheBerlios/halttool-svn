@@ -13,9 +13,9 @@ Processor::Processor()
 	reset();
 	}
 
-unsigned Processor::age( unsigned short address ) const
+const Word& Processor::reg( unsigned short address ) const
 	{
-	return regs.age( address );
+	return regs.word( address );
 	}
 
 void Processor::reset()
@@ -105,9 +105,16 @@ Object::Method Processor::decode()
 
 void Processor::setFlags( short foo )
 	{
-	negative = foo < 0;
-	zero = foo == 0;
+	// ...XNZVC
+	sr.insert( foo < 0, 3 );	// negative
+	sr.insert( foo == 0, 2 );	// zero
 	}
+
+bool Processor::negative() const
+	{ return sr.extract( 3 ); }
+
+bool Processor::zero() const
+	{ return sr.extract( 2 ); }
 
 // -------------------------------------------------------
 
@@ -136,12 +143,12 @@ void Processor::exec_move()
 void Processor::exec_lea()
 	{
 	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
-	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
-
-	short result = src.read();
-	dest.write( result );
+	Reference dest( EA::AddressDirect, ir.extract( 9, 3 ));
 	
-	setFlags( result );
+	if ( ! src.inCategory( EA::control ))
+		throw string("source must be a control addressing mode");
+
+	dest.write( src.getAddress());
 	}
 
 void Processor::exec_add()
@@ -176,7 +183,7 @@ void Processor::exec_sub()
 	if ( eaIsDest && !dest.inCategory( EA::alterable | EA::memory ))
 		throw string("destination must be alterable memory");
 	
-	short result = src.read() - dest.read();
+	short result = dest.read() - src.read();
 
 	dest.write( result );
 	setFlags( result );
@@ -204,7 +211,12 @@ void Processor::exec_div()
 	if ( !src.inCategory( EA::data ))
 		throw string("source must be data");
 
-	short result = dest.read() / src.read();
+	short divisor = src.read();
+	
+	if ( divisor == 0 )
+		throw string("division by zero");
+
+	short result = dest.read() / divisor;
 
 	dest.write( result );
 	setFlags( result );

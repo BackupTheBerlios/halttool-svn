@@ -2,6 +2,8 @@
 #ifndef halt_Word
 #define halt_Word
 
+#include <string>
+
 class Word
 	{
 public:
@@ -19,12 +21,14 @@ public:
 	short read() const;
 	void write( short );
 	
-	unsigned age() const;
-	Type type() const;
 	short peek() const;
 	void touch();
+	unsigned age() const;
+	Type type() const;
+	std::string typeString() const;
 	};
 
-extern Word* g_infoWord;
+extern const Word* g_infoWord;
+extern std::string g_infoWordName;
 
 #endif

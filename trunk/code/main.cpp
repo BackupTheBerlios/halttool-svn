@@ -5,6 +5,7 @@
 #include "ProgramEditor.h"
 #include "SystemView.h"
 #include "ControlPane.h"
+#include "WordInspector.h"
 
 // globals -----------------------------------------
 
@@ -150,7 +151,7 @@ int main( int argc, char* argv[] )
 								  glutGet( GLUT_WINDOW_HEIGHT )));
 
 	screen->addSubView( new SystemView( 350 ), point( 20, 20 ));
-
+	screen->addSubView( new WordInspector, point( 0, 0 ));
 	screen->addSubView( new ControlPane, point( 400, 20 ));
 
 	ProgramEditor* progEdit = new ProgramEditor;

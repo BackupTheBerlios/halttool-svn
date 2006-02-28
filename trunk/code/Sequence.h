@@ -34,8 +34,7 @@ class Sequence : public Object
 	void asm_add_sub();
 	void asm_mul_div();
 
-	void asm_and();
-	void asm_or();
+	void asm_and_or();
 	void asm_eor();
 	void asm_not();
 

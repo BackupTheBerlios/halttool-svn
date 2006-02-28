@@ -2,7 +2,10 @@
 #include "Word.h"
 #include "Timer.h"
 
-Word* g_infoWord;
+using namespace std;
+
+const Word* g_infoWord = NULL;
+std::string g_infoWordName;
 
 Word::Word( short v, Type t )
 	: m_value(v), m_type(t), m_timestamp(g_timer.ticks())
@@ -28,6 +31,14 @@ void Word::write( short v )
 
 Word::Type Word::type() const
 	{ return m_type; }
+
+string Word::typeString() const
+	{
+	static const string typeNames[] =
+		{"unknown","data","address","instruction"};
+
+	return typeNames[ m_type ];
+	}
 
 void Word::touch()
 	{ m_timestamp = g_timer.ticks(); }

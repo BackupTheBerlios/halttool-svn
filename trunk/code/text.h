@@ -14,5 +14,6 @@ extern const int margin;
 extern const int leading;
 
 void drawText( std::string, point );
+void drawText( std::string, unsigned lineNumber, unsigned column = 0 );
 
 #endif

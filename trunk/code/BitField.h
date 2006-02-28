@@ -14,8 +14,8 @@ struct BitField
 	BitField( short integer = 0 );
 	
 	void insert( short newValue, unsigned pos, unsigned numBits = 1 );
-	short extract( unsigned pos, unsigned numBits = 1 );
-	short extend( unsigned pos, unsigned numBits );
+	short extract( unsigned pos, unsigned numBits = 1 ) const;
+	short extend( unsigned pos, unsigned numBits ) const;
 	};
 
 #endif

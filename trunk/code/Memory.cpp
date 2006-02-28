@@ -26,18 +26,10 @@ void Memory::operator << ( const Program& prog )
 unsigned short Memory::size() const
 	{ return contents.size(); }
 
-unsigned Memory::age( unsigned short address ) const
+const Word& Memory::word( unsigned short address ) const
 	{
 	if ( address >= contents.size())
-		throw string("Memory::age, address out of bounds");
-
-	return contents[ address ].age();
-	}
-
-const Word& Memory::peek( unsigned short address ) const
-	{
-	if ( address >= contents.size())
-		throw string("Memory::peek, address out of bounds");
+		throw string("address out of bounds");
 
 	return contents[ address ];
 	}
@@ -45,7 +37,7 @@ const Word& Memory::peek( unsigned short address ) const
 short Memory::read( unsigned short address, Word::Type type ) const
 	{
 	if ( address >= contents.size())
-		throw string("Memory::read, address out of bounds");
+		throw string("address out of bounds (during read)");
 
 	return contents[ address ].read();
 	}
@@ -53,7 +45,7 @@ short Memory::read( unsigned short address, Word::Type type ) const
 void Memory::write( unsigned short address, Word::Type type, short newValue )
 	{
 	if ( address >= contents.size())
-		throw string("Memory::write, address out of bounds");
+		throw string("address out of bounds (during write)");
 
 	contents[ address ].write( newValue );
 	}

@@ -14,14 +14,13 @@ class Memory
 public:
 	void clear();
 	
-	// append "things" to memory
+	// append machine code
 	void operator << ( const Sequence& );
 	void operator << ( const Program& );
 
 	unsigned short size() const;
-	unsigned age( unsigned short address ) const;
 
-	const Word& peek( unsigned short address ) const;
+	const Word& word( unsigned short address ) const;
 
 	short read( unsigned short address, Word::Type ) const;
 	void write( unsigned short address, Word::Type, short value );

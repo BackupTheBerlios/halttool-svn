@@ -16,7 +16,7 @@ public:
 	
 	// append machine code
 	void operator << ( const Sequence& );
-	void operator << ( const Program& );
+	void operator << ( Program& );
 
 	unsigned short size() const;
 

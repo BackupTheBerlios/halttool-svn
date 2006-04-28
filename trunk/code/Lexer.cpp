@@ -9,7 +9,7 @@ Lexer::Lexer()
 	opcodes.insert("move");
 	opcodes.insert("lea");
 
-//	opcodes.insert("cmp");
+	opcodes.insert("cmp");
 	opcodes.insert("add");
 	opcodes.insert("sub");
 	opcodes.insert("mul");
@@ -24,8 +24,8 @@ Lexer::Lexer()
 	opcodes.insert("stop");
 	
 	opcodes.insert("bra");
-//	opcodes.insert("beq");
-//	opcodes.insert("bne");
+	opcodes.insert("beq");
+	opcodes.insert("bne");
 	
 	dataTypes.insert("word");
 	// No more data types for the pure 16-bit version!
@@ -130,9 +130,11 @@ Token Lexer::next()
 		}
 	else if ( !token.text.empty() )	// command, opcode, or number base
 		{
-/*		if (( commands.find( token.text )) != commands.end() )
-			token.type = Token::Command;
-		else*/ if (( opcodes.find( token.text )) != opcodes.end() )
+//		if (( commands.find( token.text )) != commands.end() )
+//			token.type = Token::Command;
+//		else
+
+		if (( opcodes.find( token.text )) != opcodes.end() )
 			token.type = Token::Opcode;
 		else if (( dataTypes.find( token.text )) != dataTypes.end() )
 			token.type = Token::DataType;

@@ -53,21 +53,18 @@ void Sequence::bind( const map< string, unsigned short >& symbols )
 		if ( symbol != symbols.end())
 			m_code[ i->offset ] = symbol->second; // we want the numeric address
 		else
-			throw string("'") + i->name + "' is a mystery symbol";
+			throw string("'") + i->name + "' is not defined";
 		}
 	}
 
 Word::Type Sequence::type() const
 	{ return m_type; }
 
-unsigned short Sequence::address() const
-	{ return m_address; }
-
-void Sequence::address( unsigned short newAddress )
-	{ m_address = newAddress; }
-
 const string Sequence::name() const
 	{
+	if ( m_tokens.empty())
+		return "";
+
 	const Token& tok = m_tokens.front();
 
 	if ( tok.is( Token::Label ))
@@ -108,6 +105,7 @@ void Sequence::translate()
 		table["move"] = EncodeEntry( 0x3000, (Method) &Sequence::asm_move );
 		table["lea"]  = EncodeEntry( 0x41c0, (Method) &Sequence::asm_lea );
 
+		table["cmp"]  = EncodeEntry( 0xb040, (Method) &Sequence::asm_add_sub );
 		table["add"]  = EncodeEntry( 0xd040, (Method) &Sequence::asm_add_sub );
 		table["sub"]  = EncodeEntry( 0x9040, (Method) &Sequence::asm_add_sub );
 		table["mul"]  = EncodeEntry( 0xc1c0, (Method) &Sequence::asm_mul_div );
@@ -118,7 +116,9 @@ void Sequence::translate()
 		table["eor"]  = EncodeEntry( 0xb140, (Method) &Sequence::asm_eor );
 		table["not"]  = EncodeEntry( 0x4640, (Method) &Sequence::asm_not );
 		
-		table["bra"]  = EncodeEntry( 0x6000, (Method) &Sequence::asm_bra );
+		table["bra"]  = EncodeEntry( 0x6000, (Method) &Sequence::asm_branch );
+		table["beq"]  = EncodeEntry( 0x6700, (Method) &Sequence::asm_branch );
+		table["bne"]  = EncodeEntry( 0x6600, (Method) &Sequence::asm_branch );
 
 		table["nop"]  = EncodeEntry( 0x4e75, NULL );
 		table["stop"] = EncodeEntry( 0x4e72, NULL );
@@ -127,6 +127,8 @@ void Sequence::translate()
 		}
 
 	// ------------------------------------------------------
+
+	m_crossRefs.clear();
 
 	if ( m_tokens.empty() || m_tokens.begin()->is( Token::Comment ))
 		return;	// blank lines are okay
@@ -300,7 +302,7 @@ EA Sequence::parseOperand()
 	else if ( token->is( Token::Label ))
 		{
 		ea = EA( EA::Absolute, 0 );
-		m_crossRefs.push_back((CrossReference){ token->text, m_code.size() });
+		m_crossRefs.push_back( CrossReference( token->text, m_code.size()));
 		m_code.push_back( 0 ); // placeholder until names are bound
 		++token;
 		}
@@ -442,7 +444,7 @@ void Sequence::asm_not()
 	opWord.insert( dest.mode, 3, 3 );
 	}
 
-void Sequence::asm_bra()
+void Sequence::asm_branch()
 	{
 	EA target = parseOperand();
 	if ( target.mode != EA::Absolute )

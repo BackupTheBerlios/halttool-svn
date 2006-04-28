@@ -22,12 +22,15 @@ class Sequence : public Object
 	std::vector< Token > m_tokens;
 	std::vector< short > m_code;
 	std::vector< std::string > m_errors;
-	unsigned short m_address;
 
 	struct CrossReference
 		{
 		std::string name;
 		unsigned short offset;
+		
+		CrossReference( std::string n, unsigned short o )
+			: name(n), offset(o)
+			{ }
 		};
 
 	std::vector< CrossReference > m_crossRefs;
@@ -49,7 +52,7 @@ class Sequence : public Object
 	void asm_eor();
 	void asm_not();
 
-	void asm_bra();
+	void asm_branch();
 
 public:
 	Sequence( std::string sourceText );
@@ -58,9 +61,6 @@ public:
 	bool success() const;
 
 	Word::Type type() const;
-
-	unsigned short address() const;
-	void address( unsigned short );
 
 	const std::string name() const;
 	const std::string& source() const;

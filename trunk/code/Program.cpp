@@ -78,25 +78,32 @@ void Program::remove( unsigned n )
 
 void Program::bind()
 	{
+	map< string, unsigned short > symbols;
 	try {
-		map< string, unsigned short > symbols;
+		vector<Sequence>::iterator seq;
 		unsigned address = 0;
 
 		// build symbols on first pass
-		for ( vector<Sequence>::iterator i = m_lines.begin(); i != m_lines.end(); ++i )
+		for ( seq = m_lines.begin(); seq != m_lines.end(); ++seq )
 			{
-			i->address( address );			// set sequence's address
-
-			string name = i->name();
+			string name = seq->name();
 			if ( ! name.empty())
-				symbols[ name ] = address;
+				{
+				if ( symbols.find( name ) == symbols.end() )
+					{
+					cout << "adding {" << name << "," << address << "}" << endl;
+					symbols[ name ] = address;
+					}
+				else
+					throw string("'") + name + "' is already defined";
+				}
 
-			address += i->code().size();	// bump counter
+			address += seq->code().size();	// bump offset
 			}
 
 		// resolve symbols on second pass
-		for ( vector<Sequence>::iterator i = m_lines.begin(); i != m_lines.end(); ++i )
-			i->bind( symbols );
+		for ( seq = m_lines.begin(); seq != m_lines.end(); ++seq )
+			seq->bind( symbols );
 		}
 	catch ( string message )
 		{

@@ -76,17 +76,20 @@ Object::Method Processor::decode()
 		{ "move", 0x3000, 0xf000, (Method) &Processor::exec_move },
 		{ "lea",  0x41c0, 0xf1c0, (Method) &Processor::exec_lea },
 
+//		{ "cmp",  0xb040, 0xf0c0, (Method) &Processor::exec_cmp },
 		{ "add",  0xd040, 0xf0c0, (Method) &Processor::exec_add },
 		{ "sub",  0x9040, 0xf0c0, (Method) &Processor::exec_sub },
 		{ "mul",  0xc1c0, 0xf1c0, (Method) &Processor::exec_mul },
 		{ "div",  0x81c0, 0xf1c0, (Method) &Processor::exec_div },
 
-		{ "and",  0xc040, 0xf0c0, (Method) &Processor::exec_and },
-		{ "or",   0x8040, 0xf0c0, (Method) &Processor::exec_or },
-		{ "eor",  0xb140, 0xf1c0, (Method) &Processor::exec_eor },
-		{ "not",  0x4640, 0xffc0, (Method) &Processor::exec_not },
+//		{ "and",  0xc040, 0xf0c0, (Method) &Processor::exec_and },
+//		{ "or",   0x8040, 0xf0c0, (Method) &Processor::exec_or },
+//		{ "eor",  0xb140, 0xf1c0, (Method) &Processor::exec_eor },
+//		{ "not",  0x4640, 0xffc0, (Method) &Processor::exec_not },
 
 		{ "bra",  0x6000, 0xffff, (Method) &Processor::exec_bra },
+		{ "beq",  0x6700, 0xffff, (Method) &Processor::exec_beq },
+		{ "bne",  0x6600, 0xffff, (Method) &Processor::exec_bne },
 
 		{ "nop",  0x4e75, 0xffff, (Method) &Processor::exec_nop },
 		{ "stop", 0x4e72, 0xffff, (Method) &Processor::exec_stop },
@@ -152,6 +155,24 @@ void Processor::exec_lea()
 
 	dest.write( src.getAddress());
 	}
+
+//void Processor::exec_cmp()
+//	{
+//	EA dataReg( EA::DataDirect, ir.extract( 9, 3 ));
+//	EA ea( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
+//
+//	bool eaIsDest = (bool) ir.extract( 8 );
+//
+//	Reference src( eaIsDest ? dataReg : ea );
+//	Reference dest( eaIsDest ? ea : dataReg );
+//	
+//	if ( eaIsDest && !dest.inCategory( EA::alterable | EA::memory ))
+//		throw string("destination must be alterable memory");
+//	
+//	short result = dest.read() - src.read();
+//
+//	setFlags( result );
+//	}
 
 void Processor::exec_add()
 	{
@@ -224,64 +245,79 @@ void Processor::exec_div()
 	setFlags( result );
 	}
 
-void Processor::exec_and()
-	{
-	throw string("under construction");
-
-//	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
-//	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+//void Processor::exec_and()
+//	{
+//	throw string("under construction");
 //
-//	short result = src.read() & dest.read();
+////	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
+////	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+////
+////	short result = src.read() & dest.read();
+////
+////	dest.write( result );
+////	setFlags( result );
+//	}
 //
-//	dest.write( result );
-//	setFlags( result );
-	}
-
-void Processor::exec_or()
-	{
-	throw string("under construction");
-
-//	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
-//	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+//void Processor::exec_or()
+//	{
+//	throw string("under construction");
 //
-//	short result = src.read() | dest.read();
+////	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
+////	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+////
+////	short result = src.read() | dest.read();
+////
+////	dest.write( result );
+////	setFlags( result );
+//	}
 //
-//	dest.write( result );
-//	setFlags( result );
-	}
-
-void Processor::exec_eor()
-	{
-	throw string("under construction");
-
-//	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
-//	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+//void Processor::exec_eor()
+//	{
+//	throw string("under construction");
 //
-//	short result = src.read() ^ dest.read();
+////	Reference src( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
+////	Reference dest( ir.extract( 6, 3 ), ir.extract( 9, 3 ));
+////
+////	short result = src.read() ^ dest.read();
+////
+////	dest.write( result );
+////	setFlags( result );
+//	}
 //
-//	dest.write( result );
-//	setFlags( result );
-	}
-
-void Processor::exec_not()
-	{
-	throw string("under construction");
-
-//	Reference dest( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
+//void Processor::exec_not()
+//	{
+//	throw string("under construction");
 //
-//	short result = ~ dest.read();
-//
-//	dest.write( result );
-//	setFlags( result );
-	}
+////	Reference dest( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
+////
+////	short result = ~ dest.read();
+////
+////	dest.write( result );
+////	setFlags( result );
+//	}
 
 void Processor::exec_nop()
 	{ /* do nothing! */ }
 
 void Processor::exec_bra()
 	{
-	// might not be quite correct, but it's competition time!
-	pc = fetch();
+	pc = fetch();	// not quite authentic, but it's competition time!
+	}
+
+void Processor::exec_beq()
+	{
+	unsigned short target = fetch();
+	if ( zero())
+		pc = target; // not quite authentic, but it's competition time!
+	}
+
+void Processor::exec_bne()
+	{
+	unsigned short target = fetch();
+	if ( ! zero())
+		pc = target; // not quite authentic, but it's competition time!
+	else
+		cout << "moving on..." << endl;
 	}
 
 void Processor::exec_stop()

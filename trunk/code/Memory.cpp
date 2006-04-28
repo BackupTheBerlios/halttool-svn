@@ -15,8 +15,9 @@ void Memory::operator << ( const Sequence& seq )
 		contents.push_back( Word( *i, seq.type()));
 	}
 
-void Memory::operator << ( const Program& prog )
+void Memory::operator << ( Program& prog )
 	{
+	prog.bind();
 	prog.dump( cout );
 
 	for ( vector<Sequence>::const_iterator i = prog.lines().begin(); i != prog.lines().end(); ++i )

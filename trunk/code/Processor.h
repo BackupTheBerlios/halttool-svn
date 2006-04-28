@@ -48,17 +48,20 @@ private:
 	void exec_move();
 	void exec_lea();
 
+//	void exec_cmp();
 	void exec_add();
 	void exec_sub();
 	void exec_mul();
 	void exec_div();
 
-	void exec_and();
-	void exec_or();
-	void exec_eor();
-	void exec_not();
+//	void exec_and();
+//	void exec_or();
+//	void exec_eor();
+//	void exec_not();
 
 	void exec_bra();
+	void exec_beq();
+	void exec_bne();
 	
 	void exec_nop();
 	void exec_stop();

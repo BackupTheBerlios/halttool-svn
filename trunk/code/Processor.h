@@ -13,14 +13,15 @@
 class Processor : public Object
 	{
 	Memory regs;			// data registers
-	unsigned short a[8];	// address registers
+	Memory addrs;			// address registers
+
+//	unsigned short a[8];	// (old) address registers
 
 	std::string mnemonic;	// current instruction
 	BitField ir;			// instruction register
 	BitField sr;			// status register
 	unsigned short pc;		// program counter
 	
-
 	bool m_error;
 	bool m_running;
 
@@ -29,6 +30,7 @@ public:
 
 	// data registers
 	const Word& reg( unsigned short address ) const;
+	const Word& addr( unsigned short address ) const;
 
 	// status flags
 	bool negative() const;
@@ -48,7 +50,7 @@ private:
 	void exec_move();
 	void exec_lea();
 
-//	void exec_cmp();
+	void exec_cmp();
 	void exec_add();
 	void exec_sub();
 	void exec_mul();

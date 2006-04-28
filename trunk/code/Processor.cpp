@@ -10,13 +10,16 @@ Processor g_cpu;
 Processor::Processor()
 	{
 	regs << Sequence("word[8]");
+	addrs << Sequence("word[8]");
+
 	reset();
 	}
 
 const Word& Processor::reg( unsigned short address ) const
-	{
-	return regs.word( address );
-	}
+	{ return regs.word( address ); }
+
+const Word& Processor::addr( unsigned short address ) const
+	{ return addrs.word( address ); }
 
 void Processor::reset()
 	{
@@ -26,7 +29,7 @@ void Processor::reset()
 	for ( int i = 0; i <= 7; ++i )
 		{
 		regs.write( i, Word::Data, 0 );
-		a[i] = 0;
+		addrs.write( i, Word::Address, -1 ); // incorrect, but forces unused regs offscreen
 		}
 
 	setFlags( 0 );
@@ -76,7 +79,7 @@ Object::Method Processor::decode()
 		{ "move", 0x3000, 0xf000, (Method) &Processor::exec_move },
 		{ "lea",  0x41c0, 0xf1c0, (Method) &Processor::exec_lea },
 
-//		{ "cmp",  0xb040, 0xf0c0, (Method) &Processor::exec_cmp },
+		{ "cmp",  0xb040, 0xf0c0, (Method) &Processor::exec_cmp },
 		{ "add",  0xd040, 0xf0c0, (Method) &Processor::exec_add },
 		{ "sub",  0x9040, 0xf0c0, (Method) &Processor::exec_sub },
 		{ "mul",  0xc1c0, 0xf1c0, (Method) &Processor::exec_mul },
@@ -156,23 +159,26 @@ void Processor::exec_lea()
 	dest.write( src.getAddress());
 	}
 
-//void Processor::exec_cmp()
-//	{
-//	EA dataReg( EA::DataDirect, ir.extract( 9, 3 ));
-//	EA ea( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
-//
-//	bool eaIsDest = (bool) ir.extract( 8 );
-//
-//	Reference src( eaIsDest ? dataReg : ea );
-//	Reference dest( eaIsDest ? ea : dataReg );
-//	
+void Processor::exec_cmp()
+	{
+	// this instruction is not "by the book"
+	// it's a placeholder for the demonstration.
+
+	EA dataReg( EA::DataDirect, ir.extract( 9, 3 ));
+	EA ea( ir.extract( 3, 3 ), ir.extract( 0, 3 ));
+
+	bool eaIsDest = (bool) ir.extract( 8 );
+
+	Reference src( eaIsDest ? dataReg : ea );
+	Reference dest( eaIsDest ? ea : dataReg );
+	
 //	if ( eaIsDest && !dest.inCategory( EA::alterable | EA::memory ))
 //		throw string("destination must be alterable memory");
-//	
-//	short result = dest.read() - src.read();
-//
-//	setFlags( result );
-//	}
+	
+	short result = dest.read() - src.read();
+
+	setFlags( result );
+	}
 
 void Processor::exec_add()
 	{

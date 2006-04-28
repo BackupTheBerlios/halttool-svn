@@ -17,9 +17,9 @@ Sequence::Sequence( string sourceText )
 	 
 	lex << sourceText;
 
-	//windows specific kludge. please leave in place
-	//otherwise windows will eat your babies
-	// <mike>Windows is wrong</mike>
+	// <matt> windows specific kludge. please leave in place
+	//        otherwise windows will eat your babies </matt>
+	// <mike> Windows is wrong! </mike>
 	if (sourceText.empty())
 		{
 		 //Token t_t (Token::EndLine); //edit this line

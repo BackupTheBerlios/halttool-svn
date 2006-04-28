@@ -137,6 +137,31 @@ void SystemView::draw()
 			angle += m_angleStep;
 			}
 
+		glLineWidth( 2.0 );
+
+		// draw address registers
+		for ( unsigned reg = 0; reg <= 7; ++reg )
+			{
+			unsigned short addr = g_cpu.addr( reg ).peek();
+			if ( addr < memSize )
+				{
+				float intensity;
+				switch ( g_cpu.addr( reg ).age())
+					{
+					case 0: intensity = 1.0; break;
+					case 1: intensity = 0.8; break;
+					case 2: intensity = 0.6; break;
+					case 3: intensity = 0.4; break;
+					default: intensity = 0.2;
+					}
+				Color::palette["address"].scaleValue( intensity ).set();
+
+				gotoPoint( m_angleStep * ( addr + 1 ), m_pathRadius );
+					drawCircle( 1.1 * m_circleRadius, stroke );
+				glPopMatrix();
+				}
+			}
+
 		Color().set(); // default color
 		glPointSize( 3 );
 
@@ -146,7 +171,6 @@ void SystemView::draw()
 		drawPoint(( memSize + 3.0 ) / m_spaces, m_pathRadius );
 
 		// begin / end boundary
-		glLineWidth( 2 );
 		drawLine( 0, m_pathRadius - 0.1, m_pathRadius + 0.1 );
 		glLineWidth( 1 ); // back to the default -- could push/pop
 		}
@@ -165,7 +189,7 @@ void SystemView::draw()
 
 		float angle = 1.5 * angleStep;
 
-		// draw registers
+		// draw data registers
 		for ( unsigned reg = 0; reg <= 7; ++reg )
 			{
 			float intensity;

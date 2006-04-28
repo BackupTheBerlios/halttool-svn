@@ -19,19 +19,20 @@ Sequence::Sequence( string sourceText )
 
 	//windows specific kludge. please leave in place
 	//otherwise windows will eat your babies
+	// <mike>Windows is wrong</mike>
 	if (sourceText.empty())
-	{
-	 //Token t_t (Token::EndLine); //edit this line
-	 //m_tokens.push_back( t_t );
-	}
-	else
-	while ( lex >> t )
 		{
-		m_tokens.push_back( t );
-
-		if ( ! lex.success() )
-			m_errors.push_back( lex.error() );
+		 //Token t_t (Token::EndLine); //edit this line
+		 //m_tokens.push_back( t_t );
 		}
+	else
+		while ( lex >> t )
+			{
+			m_tokens.push_back( t );
+
+			if ( ! lex.success() )
+				m_errors.push_back( lex.error() );
+			}
 	
 	translate();
 	}

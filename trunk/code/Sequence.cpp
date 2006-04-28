@@ -383,14 +383,14 @@ void Sequence::asm_add_sub()
 	
 	if ( dest.mode == EA::DataDirect )
 		{
-		opWord.insert( dest.mode, 9, 3 );
+		opWord.insert( dest.reg, 9, 3 );
 		opWord.insert( 0, 8 ); // op-mode
 		opWord.insert( src.reg, 0, 3 );
 		opWord.insert( src.mode, 3, 3 );
 		}
 	else if ( src.mode == EA::DataDirect )
 		{
-		opWord.insert( src.mode, 9, 3 );
+		opWord.insert( src.reg, 9, 3 );
 		opWord.insert( 1, 8 ); // op-mode
 		opWord.insert( dest.reg, 0, 3 );
 		opWord.insert( dest.mode, 3, 3 );

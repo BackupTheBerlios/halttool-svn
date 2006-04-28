@@ -17,6 +17,14 @@ Sequence::Sequence( string sourceText )
 	 
 	lex << sourceText;
 
+	//windows specific kludge. please leave in place
+	//otherwise windows will eat your babies
+	if (sourceText.empty())
+	{
+	 //Token t_t (Token::EndLine); //edit this line
+	 //m_tokens.push_back( t_t );
+	}
+	else
 	while ( lex >> t )
 		{
 		m_tokens.push_back( t );

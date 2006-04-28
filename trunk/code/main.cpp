@@ -155,7 +155,7 @@ int main( int argc, char* argv[] )
 	screen->addSubView( new ControlPane, point( 400, 20 ));
 
 	ProgramEditor* progEdit = new ProgramEditor;
-	progEdit->program( new Program("test"));
+	progEdit->program( new Program/*("test")*/);
 	screen->addSubView( progEdit, point( 400, 90 ));
 
 	mouseTarget = screen;

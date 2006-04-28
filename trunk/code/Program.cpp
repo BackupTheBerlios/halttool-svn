@@ -76,6 +76,34 @@ void Program::remove( unsigned n )
 	m_lines.erase( m_lines.begin() + ( n - 1 ));
 	}
 
+void Program::bind()
+	{
+	try {
+		map< string, unsigned short > symbols;
+		unsigned address = 0;
+
+		// build symbols on first pass
+		for ( vector<Sequence>::iterator i = m_lines.begin(); i != m_lines.end(); ++i )
+			{
+			i->address( address );			// set sequence's address
+
+			string name = i->name();
+			if ( ! name.empty())
+				symbols[ name ] = address;
+
+			address += i->code().size();	// bump counter
+			}
+
+		// resolve symbols on second pass
+		for ( vector<Sequence>::iterator i = m_lines.begin(); i != m_lines.end(); ++i )
+			i->bind( symbols );
+		}
+	catch ( string message )
+		{
+		cerr << "<bind> " << message << endl;
+		}
+	}
+
 void Program::dump( ostream& out ) const
 	{
 	out << endl;

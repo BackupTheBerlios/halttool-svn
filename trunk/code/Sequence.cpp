@@ -17,14 +17,13 @@ Sequence::Sequence( string sourceText )
 	 
 	lex << sourceText;
 
-	if (sourceText != string("") ) //Matt 2-18-06
-		while ( lex >> t )
-			{
-			m_tokens.push_back( t );
+	while ( lex >> t )
+		{
+		m_tokens.push_back( t );
 
-			if ( ! lex.success() )
-				m_errors.push_back( lex.error() );
-			}
+		if ( ! lex.success() )
+			m_errors.push_back( lex.error() );
+		}
 	
 	translate();
 	}
@@ -46,8 +45,36 @@ void Sequence::dump( ostream& out ) const
 			out << *i << endl;
 	}
 
+void Sequence::bind( const map< string, unsigned short >& symbols )	
+	{
+	for ( vector<CrossReference>::const_iterator i = m_crossRefs.begin(); i != m_crossRefs.end(); ++i )
+		{
+		map< string, unsigned short >::const_iterator symbol = symbols.find( i->name );
+		if ( symbol != symbols.end())
+			m_code[ i->offset ] = symbol->second; // we want the numeric address
+		else
+			throw string("'") + i->name + "' is a mystery symbol";
+		}
+	}
+
 Word::Type Sequence::type() const
 	{ return m_type; }
+
+unsigned short Sequence::address() const
+	{ return m_address; }
+
+void Sequence::address( unsigned short newAddress )
+	{ m_address = newAddress; }
+
+const string Sequence::name() const
+	{
+	const Token& tok = m_tokens.front();
+
+	if ( tok.is( Token::Label ))
+		return tok.text;
+	else
+		return "";
+	}
 
 const string& Sequence::source() const
 	{ return m_source; }
@@ -91,6 +118,8 @@ void Sequence::translate()
 		table["eor"]  = EncodeEntry( 0xb140, (Method) &Sequence::asm_eor );
 		table["not"]  = EncodeEntry( 0x4640, (Method) &Sequence::asm_not );
 		
+		table["bra"]  = EncodeEntry( 0x6000, (Method) &Sequence::asm_bra );
+
 		table["nop"]  = EncodeEntry( 0x4e75, NULL );
 		table["stop"] = EncodeEntry( 0x4e72, NULL );
 
@@ -102,7 +131,7 @@ void Sequence::translate()
 	if ( m_tokens.empty() || m_tokens.begin()->is( Token::Comment ))
 		return;	// blank lines are okay
 
-	m_tokens.push_back( Token::EndLine );				// should end up here after parse
+	m_tokens.push_back( Token::EndLine );	// should end up here after parse
 	token = m_tokens.begin();
 
 	try {
@@ -271,7 +300,8 @@ EA Sequence::parseOperand()
 	else if ( token->is( Token::Label ))
 		{
 		ea = EA( EA::Absolute, 0 );
-		m_code.push_back( 0 );
+		m_crossRefs.push_back((CrossReference){ token->text, m_code.size() });
+		m_code.push_back( 0 ); // placeholder until names are bound
 		++token;
 		}
 	else if ( token->is( Token::Number ))
@@ -410,4 +440,11 @@ void Sequence::asm_not()
 		throw string("destination must be alterable data");
 	opWord.insert( dest.reg, 0, 3 );
 	opWord.insert( dest.mode, 3, 3 );
+	}
+
+void Sequence::asm_bra()
+	{
+	EA target = parseOperand();
+	if ( target.mode != EA::Absolute )
+		throw string("branch target must be a label");
 	}

@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include <iostream>
 
 #include "Object.h"
@@ -11,6 +12,7 @@
 #include "Token.h"
 #include "EA.h"
 #include "BitField.h"
+
 
 class Sequence : public Object
 	{
@@ -20,6 +22,15 @@ class Sequence : public Object
 	std::vector< Token > m_tokens;
 	std::vector< short > m_code;
 	std::vector< std::string > m_errors;
+	unsigned short m_address;
+
+	struct CrossReference
+		{
+		std::string name;
+		unsigned short offset;
+		};
+
+	std::vector< CrossReference > m_crossRefs;
 
 	// these are only used during construction
 	std::vector< Token >::iterator token;
@@ -38,6 +49,8 @@ class Sequence : public Object
 	void asm_eor();
 	void asm_not();
 
+	void asm_bra();
+
 public:
 	Sequence( std::string sourceText );
 
@@ -46,10 +59,15 @@ public:
 
 	Word::Type type() const;
 
+	unsigned short address() const;
+	void address( unsigned short );
+
+	const std::string name() const;
 	const std::string& source() const;
 	const std::vector< Token >& tokens() const;
 	const std::vector< short >& code() const;
 
+	void bind( const std::map< std::string, unsigned short >& symbols );
 	void dump( std::ostream& ) const;
 	};
 

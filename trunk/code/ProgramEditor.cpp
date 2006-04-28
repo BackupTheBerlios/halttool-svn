@@ -34,6 +34,7 @@ void ProgramEditor::sizeToFit()
 	bounds.w = m_program->lineLength() * fontWidth + 2 * margin;
 	bounds.h = m_program->lineCount() * ( fontHeight + leading ) - leading + 2 * margin;
 	
+	m_program->bind();
 	g_mem.clear();
 	g_mem << *m_program;
 	}

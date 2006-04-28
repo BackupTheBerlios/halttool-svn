@@ -62,6 +62,7 @@ void Timer::trigger( int id )
 View* Timer::click( point p )
 	{
 	enabled() ? stop() : start();
+	glutPostRedisplay();
 	return this;
 	}
 

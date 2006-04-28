@@ -28,6 +28,7 @@ public:
 	void insert( unsigned n, Sequence );
 	void remove( unsigned n );
 	
+	void bind();
 	void dump( std::ostream& ) const;
 	};
 

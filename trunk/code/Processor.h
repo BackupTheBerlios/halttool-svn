@@ -57,6 +57,8 @@ private:
 	void exec_or();
 	void exec_eor();
 	void exec_not();
+
+	void exec_bra();
 	
 	void exec_nop();
 	void exec_stop();

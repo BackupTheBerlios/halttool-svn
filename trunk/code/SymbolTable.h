@@ -1,9 +1,27 @@
-/*
- *  SymbolTable.h
- *  halt
- *
- *  Created by Mike Erwin on 2/23/2006.
- *  Copyright 2006 __MyCompanyName__. All rights reserved.
- *
- */
 
+#ifndef halt_SymbolTable
+#define halt_SymbolTable
+
+#include <string>
+#include <map>
+
+class Sequence; // forward reference
+
+struct CrossReference
+	{
+	Sequence* sequence;
+	unsigned short offset;
+	};
+
+class SymbolTable
+	{
+	std::map< std::string, Sequence* > namedSequences;
+	std::multimap< std::string, CrossReference > crossReferences;
+
+public:
+	void bind();
+	};
+
+extern SymbolTable g_symbolTable;
+
+#endif

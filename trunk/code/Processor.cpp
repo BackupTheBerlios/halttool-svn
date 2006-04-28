@@ -86,6 +86,8 @@ Object::Method Processor::decode()
 		{ "eor",  0xb140, 0xf1c0, (Method) &Processor::exec_eor },
 		{ "not",  0x4640, 0xffc0, (Method) &Processor::exec_not },
 
+		{ "bra",  0x6000, 0xffff, (Method) &Processor::exec_bra },
+
 		{ "nop",  0x4e75, 0xffff, (Method) &Processor::exec_nop },
 		{ "stop", 0x4e72, 0xffff, (Method) &Processor::exec_stop },
 
@@ -275,6 +277,12 @@ void Processor::exec_not()
 
 void Processor::exec_nop()
 	{ /* do nothing! */ }
+
+void Processor::exec_bra()
+	{
+	// might not be quite correct, but it's competition time!
+	pc = fetch();
+	}
 
 void Processor::exec_stop()
 	{ m_running = false; }
